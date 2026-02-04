@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dott.ssa Alessia Muscas | Psicologa</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Lato:wght@300;400&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/scrollreveal"></script>
+    
+    <style>
+        :root {
+            --primary-color: #4e7d6b;
+            --accent-color: #8fb1a5;
+            --text-dark: #333333;
+            --text-light: #ffffff;
+            --bg-light: #ffffff;
+            --bg-grey: #f4f7f6;
+            --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Lato', sans-serif; color: var(--text-dark); overflow-x: hidden; line-height: 1.6; background: var(--bg-light); }
+        h1, h2, h3 { font-family: 'Montserrat', sans-serif; font-weight: 700; text-transform: uppercase; }
+        
+        /* --- ANIMAZIONI --- */
+        @keyframes fadeInScale {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        /* --- DASHBOARD & LOGIN --- */
+        #admin-auth-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8); display: none; align-items: center; justify-content: center;
+            z-index: 10000; backdrop-filter: blur(5px);
+        }
+
+        #admin-dashboard {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--bg-grey); z-index: 9999; display: none;
+            grid-template-columns: 280px 1fr;
+        }
+
+        .auth-card {
+            background: white; padding: 40px; border-radius: 15px; text-align: center;
+            animation: fadeInScale 0.4s ease; box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+
+        .sidebar { background: #1a252f; color: white; padding: 40px 20px; }
+        .sidebar li { 
+            padding: 15px; margin: 10px 0; border-radius: 8px; cursor: pointer; 
+            list-style: none; transition: var(--transition);
+        }
+        .sidebar li:hover { background: var(--primary-color); transform: translateX(10px); }
+
+        .admin-table { width: 100%; border-collapse: collapse; margin-top: 20px; background: white; border-radius: 10px; overflow: hidden; }
+        .admin-table th, .admin-table td { padding: 15px; text-align: left; border-bottom: 1px solid #eee; }
+        .action-btn { padding: 5px 10px; border-radius: 5px; cursor: pointer; border: none; font-size: 0.8rem; margin-right: 5px; color: white; }
+        .edit-btn { background: var(--accent-color); }
+        .del-btn { background: #ff7675; }
+
+        /* --- SEZIONE ARTICOLI (BLOG) --- */
+        #blog { background: var(--bg-grey); }
+        
+        .blog-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(300px, 380px)); 
+            gap: 30px; 
+            margin: 40px auto 0 auto; 
+            max-width: 1200px; 
+            justify-content: center; 
+        }
+
+        .blog-card { 
+            background: white; border-radius: 15px; overflow: hidden; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05); transition: var(--transition);
+            display: flex; flex-direction: column; height: 100%;
+            visibility: hidden;
+        }
+        .blog-card:hover { transform: translateY(-10px); box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+        .blog-card img { width: 100%; height: 220px; object-fit: cover; }
+        .blog-content { padding: 25px; flex-grow: 1; }
+        .blog-content h3 { font-size: 1.1rem; margin-bottom: 10px; color: var(--primary-color); }
+        .blog-date { font-size: 0.8rem; color: #999; margin-bottom: 15px; display: block; }
+        
+        .read-more { 
+            color: var(--primary-color); font-weight: bold; cursor: pointer; 
+            text-decoration: underline; margin-top: 10px; display: inline-block; 
+        }
+
+        /* --- REUSABLE & HERO --- */
+        .section { padding: 100px 10%; min-height: 80vh; display: flex; flex-direction: column; justify-content: center; }
+        .main-title { font-size: 2.5rem; margin-bottom: 50px; position: relative; }
+        .main-title::after { content: ''; position: absolute; left: 0; bottom: -10px; width: 60px; height: 5px; background: var(--primary-color); }
+        
+        .btn {
+            display: inline-block; padding: 12px 35px; border: 2px solid var(--primary-color);
+            font-weight: bold; text-transform: uppercase; cursor: pointer; transition: var(--transition);
+            background: transparent; color: var(--primary-color); border-radius: 50px;
+        }
+        .btn:hover { background: var(--primary-color); color: white; transform: translateY(-3px); }
+
+        #hero { height: 100vh; background: linear-gradient(to right, #ffffff, #f0f4f2); }
+        .hero-text { font-size: 3.8rem; line-height: 1.1; visibility: hidden; }
+        .hero-text span { color: var(--primary-color); }
+
+        /* --- BIOGRAFIA --- */
+        #bio { background: var(--primary-color); color: white; }
+        .bio-container { display: flex; align-items: center; gap: 60px; flex-wrap: wrap; }
+        .bio-image { 
+            flex: 0 0 350px; 
+            height: 450px; 
+            object-fit: cover; 
+            border-radius: 20px; 
+            box-shadow: 20px 20px 0px var(--accent-color);
+            visibility: hidden;
+        }
+        .bio-text { flex: 1; min-width: 300px; visibility: hidden; }
+
+        footer { padding: 60px 10%; background: #222; color: white; text-align: center; }
+        .admin-trigger { margin-top: 30px; font-size: 0.7rem; letter-spacing: 2px; cursor: pointer; opacity: 0.4; }
+
+        @media (max-width: 900px) {
+            .hero-text { font-size: 2.5rem; }
+            #admin-dashboard { grid-template-columns: 1fr; }
+            .sidebar { display: none; }
+            .bio-container { justify-content: center; text-align: center; }
+            .bio-image { flex: 0 0 100%; max-width: 300px; height: 350px; margin-bottom: 30px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="admin-auth-overlay">
+        <div class="auth-card">
+            <h3>Accesso Riservato</h3>
+            <input type="password" id="adminPass" placeholder="Password" style="width: 100%; padding: 12px; margin: 20px 0; border-radius: 5px; border: 1px solid #ddd;">
+            <button class="btn" onclick="checkPassword()">Entra</button>
+            <button class="btn" onclick="closeAuth()" style="border:none;">Annulla</button>
+        </div>
+    </div>
+
+    <div id="admin-dashboard">
+        <aside class="sidebar">
+            <h2 style="color:white; margin-bottom: 30px;">Dott.ssa Muscas</h2>
+            <ul>
+                <li onclick="scrollToSection('editor-area')">Nuovo Articolo</li>
+                <li onclick="scrollToSection('manage-area')">Gestisci Articoli</li>
+                <li onclick="location.reload()" style="margin-top: 50px; color: #ff7675;">Esci</li>
+            </ul>
+        </aside>
+        <main style="padding: 60px; overflow-y: auto;">
+            <div id="editor-area" style="background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); margin-bottom: 50px;">
+                <h2 id="editor-title">Nuovo Articolo</h2>
+                <input type="hidden" id="edit-id">
+                <input type="text" id="postTitle" placeholder="Titolo" style="width:100%; padding:15px; margin:20px 0 10px 0; border:1px solid #eee; border-radius:8px;">
+                <input type="file" id="postImg" accept="image/*" style="margin-bottom: 20px;">
+                <textarea id="postContent" rows="8" placeholder="Contenuto..." style="width:100%; padding:15px; border:1px solid #eee; border-radius:8px;"></textarea>
+                <button class="btn" id="publish-btn" style="margin-top:20px;" onclick="savePost()">Pubblica</button>
+                <button class="btn" id="cancel-edit" style="margin-top:20px; border:none; display:none;" onclick="resetForm()">Annulla</button>
+            </div>
+            <div id="manage-area" style="background: white; padding: 40px; border-radius: 20px;">
+                <h2>I tuoi Articoli</h2>
+                <table class="admin-table">
+                    <thead><tr><th>Data</th><th>Titolo</th><th>Azioni</th></tr></thead>
+                    <tbody id="admin-list"></tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <section id="hero" class="section">
+        <h1 class="hero-text">Ritrova la tua<br><span>Serenità</span> con la<br>Dott.ssa Muscas.</h1>
+    </section>
+
+    <section id="bio" class="section">
+        <div class="bio-container">
+            <img src="https://pixel-p2.s3.eu-central-1.amazonaws.com/doctor/avatar/5f9970a0/5f9970a0-b017-4418-b90b-c588a456f1e7_large.jpg" alt="Dott.ssa Alessia Muscas" class="bio-image">
+            <div class="bio-text">
+                <h2 class="main-title" style="color: white; border-bottom: none;">Chi Sono</h2>
+                <p style="font-size: 1.1rem; margin-bottom: 20px;">Sono la Dott.ssa Alessia Muscas, psicologa specializzata nel supporto clinico e nel benessere della persona. Il mio approccio si basa sull'ascolto empatico e sulla creazione di uno spazio sicuro e non giudicante.</p>
+                <p style="font-size: 1.1rem; margin-bottom: 25px;">Attraverso percorsi personalizzati, aiuto i miei pazienti ad affrontare sfide legate all'ansia, allo stress e alle difficoltà relazionali, promuovendo la consapevolezza e la crescita personale.</p>
+                <a href="#blog" class="btn" style="border-color: white; color: white;">Leggi i miei consigli</a>
+            </div>
+        </div>
+    </section>
+
+    <section id="blog" class="section">
+        <h2 class="main-title" style="visibility: hidden;">Approfondimenti</h2>
+        <div class="blog-grid" id="public-blog-grid"></div>
+    </section>
+
+    <footer>
+        <p>&copy; 2026 Dott.ssa Alessia Muscas</p>
+        <div class="admin-trigger" onclick="openAuth()">PORTALE AMMINISTRATORE</div>
+    </footer>
+
+    <script>
+        let articles = JSON.parse(localStorage.getItem('muscas_blog_data')) || [];
+        const TEXT_LIMIT = 150;
+
+        function renderAll() {
+            const grid = document.getElementById('public-blog-grid');
+            const list = document.getElementById('admin-list');
+            grid.innerHTML = articles.length === 0 ? '<p>Nessun articolo.</p>' : '';
+            list.innerHTML = '';
+
+            articles.forEach(art => {
+                const isLong = art.content.length > TEXT_LIMIT;
+                const card = document.createElement('div');
+                card.className = 'blog-card';
+                card.style.visibility = 'visible';
+                card.innerHTML = `
+                    <img src="${art.image}">
+                    <div class="blog-content">
+                        <span class="blog-date">${art.date}</span>
+                        <h3>${art.title}</h3>
+                        <p id="text-${art.id}">${isLong ? art.content.substring(0, TEXT_LIMIT) + '...' : art.content}</p>
+                        ${isLong ? `<span class="read-more" id="btn-${art.id}" onclick="toggleReadMore(${art.id})">Leggi ancora</span>` : ''}
+                    </div>
+                `;
+                grid.appendChild(card);
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `<td>${art.date}</td><td>${art.title}</td><td>
+                    <button class="action-btn edit-btn" onclick="prepareEdit(${art.id})">Modifica</button>
+                    <button class="action-btn del-btn" onclick="deletePost(${art.id})">Elimina</button>
+                </td>`;
+                list.appendChild(tr);
+            });
+        }
+
+        function toggleReadMore(id) {
+            const art = articles.find(a => a.id === id);
+            const text = document.getElementById(`text-${id}`);
+            const btn = document.getElementById(`btn-${id}`);
+            if (btn.innerText === "Leggi ancora") {
+                text.innerText = art.content;
+                btn.innerText = "Mostra meno";
+            } else {
+                text.innerText = art.content.substring(0, TEXT_LIMIT) + '...';
+                btn.innerText = "Leggi ancora";
+            }
+        }
+
+        async function savePost() {
+            const id = document.getElementById('edit-id').value;
+            const title = document.getElementById('postTitle').value;
+            const content = document.getElementById('postContent').value;
+            const imgFile = document.getElementById('postImg').files[0];
+
+            if(!title || !content) return alert("Compila tutto!");
+
+            let imgData = "https://images.unsplash.com/photo-1499209974431-9dac3adaf471?w=800";
+            if(imgFile) {
+                imgData = await new Promise(r => {
+                    const reader = new FileReader();
+                    reader.onload = e => r(e.target.result);
+                    reader.readAsDataURL(imgFile);
+                });
+            } else if(id) {
+                imgData = articles.find(a => a.id == id).image;
+            }
+
+            if(id) {
+                const i = articles.findIndex(a => a.id == id);
+                articles[i] = { ...articles[i], title, content, image: imgData };
+            } else {
+                articles.unshift({ id: Date.now(), title, content, image: imgData, date: new Date().toLocaleDateString('it-IT') });
+            }
+
+            localStorage.setItem('muscas_blog_data', JSON.stringify(articles));
+            resetForm();
+            renderAll();
+        }
+
+        function deletePost(id) {
+            if(confirm("Eliminare?")) {
+                articles = articles.filter(a => a.id !== id);
+                localStorage.setItem('muscas_blog_data', JSON.stringify(articles));
+                renderAll();
+            }
+        }
+
+        function prepareEdit(id) {
+            const art = articles.find(a => a.id == id);
+            document.getElementById('edit-id').value = art.id;
+            document.getElementById('postTitle').value = art.title;
+            document.getElementById('postContent').value = art.content;
+            document.getElementById('publish-btn').innerText = "Salva";
+            document.getElementById('cancel-edit').style.display = "inline-block";
+            scrollToSection('editor-area');
+        }
+
+        function resetForm() {
+            document.getElementById('edit-id').value = '';
+            document.getElementById('postTitle').value = '';
+            document.getElementById('postContent').value = '';
+            document.getElementById('postImg').value = '';
+            document.getElementById('publish-btn').innerText = "Pubblica";
+            document.getElementById('cancel-edit').style.display = "none";
+        }
+
+        function openAuth() { document.getElementById('admin-auth-overlay').style.display = 'flex'; }
+        function closeAuth() { document.getElementById('admin-auth-overlay').style.display = 'none'; }
+        function checkPassword() {
+            if(document.getElementById('adminPass').value === 'psico2026') {
+                closeAuth();
+                document.getElementById('admin-dashboard').style.display = 'grid';
+                renderAll();
+            } else alert("Errata");
+        }
+        function scrollToSection(id) { document.getElementById(id).scrollIntoView({ behavior: 'smooth' }); }
+
+        ScrollReveal().reveal('.hero-text', { origin: 'left', distance: '80px', duration: 1200 });
+        ScrollReveal().reveal('.main-title', { origin: 'left', distance: '40px', duration: 1200 });
+        ScrollReveal().reveal('.bio-image', { origin: 'left', distance: '80px', duration: 1200, delay: 200 });
+        ScrollReveal().reveal('.bio-text', { origin: 'right', distance: '80px', duration: 1200, delay: 400 });
+
+        renderAll();
+    </script>
+</body>
+</html>
