@@ -59,7 +59,7 @@
         .edit-btn { background: var(--accent-color); }
         .del-btn { background: #ff7675; }
 
-        /* --- BLOG & GRID --- */
+        /* --- BLOG --- */
         #blog { background: var(--bg-grey); }
         .blog-grid { 
             display: grid; 
@@ -90,7 +90,7 @@
         .btn {
             display: inline-block; padding: 12px 35px; border: 2px solid var(--primary-color);
             font-weight: bold; text-transform: uppercase; cursor: pointer; transition: var(--transition);
-            background: transparent; color: var(--primary-color); border-radius: 50px; text-decoration: none; text-align: center;
+            background: transparent; color: var(--primary-color); border-radius: 50px; text-decoration: none;
         }
         .btn:hover { background: var(--primary-color); color: white; transform: translateY(-3px); }
 
@@ -107,23 +107,20 @@
         }
         .bio-text { flex: 1; min-width: 300px; visibility: hidden; }
 
-        /* --- FORM CONTATTI --- */
+        /* --- CONTATTI / FORM --- */
         #contatti { background: white; }
-        .contact-container { max-width: 800px; margin: 0 auto; width: 100%; }
-        .appointment-form { background: var(--bg-grey); padding: 40px; border-radius: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
-        .form-group { margin-bottom: 20px; }
-        .form-group label { display: block; margin-bottom: 8px; font-weight: bold; color: var(--primary-color); }
-        .form-group input, .form-group textarea, .form-group select {
-            width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-family: inherit;
+        .form-container { max-width: 600px; margin: 0 auto; width: 100%; }
+        .contact-form { background: var(--bg-grey); padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+        .contact-form label { display: block; margin-bottom: 10px; font-weight: bold; color: var(--primary-color); }
+        .contact-form input, .contact-form textarea {
+            width: 100%; padding: 15px; margin-bottom: 20px; border: 1px solid #ddd; border-radius: 8px; font-family: inherit;
         }
-        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
 
         footer { padding: 60px 10%; background: #222; color: white; text-align: center; }
         .admin-trigger { margin-top: 30px; font-size: 0.7rem; letter-spacing: 2px; cursor: pointer; opacity: 0.4; }
 
         @media (max-width: 900px) {
             .hero-text { font-size: 2.5rem; }
-            .form-row { grid-template-columns: 1fr; }
             #admin-dashboard { grid-template-columns: 1fr; }
             .sidebar { display: none; }
             .bio-container { justify-content: center; text-align: center; }
@@ -173,7 +170,7 @@
 
     <section id="hero" class="section">
         <h1 class="hero-text">Ritrova la tua<br><span>Serenità</span> con la<br>Dott.ssa Muscas.</h1>
-        <div style="margin-top: 30px;"><a href="#contatti" class="btn">Prenota un Appuntamento</a></div>
+        <div style="margin-top: 30px;"><a href="#contatti" class="btn">Contattami</a></div>
     </section>
 
     <section id="bio" class="section">
@@ -181,8 +178,8 @@
             <img src="https://pixel-p2.s3.eu-central-1.amazonaws.com/doctor/avatar/5f9970a0/5f9970a0-b017-4418-b90b-c588a456f1e7_large.jpg" alt="Dott.ssa Alessia Muscas" class="bio-image">
             <div class="bio-text">
                 <h2 class="main-title" style="color: white; border-bottom: none;">Chi Sono</h2>
-                <p style="font-size: 1.1rem; margin-bottom: 20px;">Sono la Dott.ssa Alessia Muscas, psicologa specializzata nel supporto clinico e nel benessere della persona.</p>
-                <p style="font-size: 1.1rem; margin-bottom: 25px;">Attraverso percorsi personalizzati, aiuto i miei pazienti ad affrontare sfide legate all'ansia e allo stress.</p>
+                <p style="font-size: 1.1rem; margin-bottom: 20px;">Sono la Dott.ssa Alessia Muscas, psicologa specializzata nel supporto clinico e nel benessere della persona. Il mio approccio si basa sull'ascolto empatico e sulla creazione di uno spazio sicuro e non giudicante.</p>
+                <p style="font-size: 1.1rem; margin-bottom: 25px;">Attraverso percorsi personalizzati, aiuto i miei pazienti ad affrontare sfide legate all'ansia, allo stress e alle difficoltà relazionali.</p>
                 <a href="#blog" class="btn" style="border-color: white; color: white;">Leggi i miei consigli</a>
             </div>
         </div>
@@ -194,43 +191,16 @@
     </section>
 
     <section id="contatti" class="section">
-        <div class="contact-container">
-            <h2 class="main-title">Prenota un Appuntamento</h2>
-            <p style="margin-bottom: 30px;">Compila il modulo sottostante per richiedere una consulenza. Sarai ricontattato al più presto.</p>
-            
-            <form action="https://formspree.io/f/sorin.mateii08@gmail.com" method="POST" class="appointment-form">
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Nome e Cognome</label>
-                        <input type="text" name="Nominativo" placeholder="Inserisci il tuo nome" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Email</label>
-                        <input type="email" name="_replyto" placeholder="La tua email" required>
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Telefono</label>
-                        <input type="tel" name="Telefono" placeholder="Il tuo numero">
-                    </div>
-                    <div class="form-group">
-                        <label>Tipo di Consulenza</label>
-                        <select name="Servizio">
-                            <option value="Primo Colloquio">Primo Colloquio</option>
-                            <option value="Sostegno Psicologico">Sostegno Psicologico</option>
-                            <option value="Consulenza Online">Consulenza Online</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label>Messaggio (opzionale)</label>
-                    <textarea name="Messaggio" rows="4" placeholder="Descrivi brevemente la tua richiesta..."></textarea>
-                </div>
-
-                <button type="submit" class="btn" style="width: 100%; background: var(--primary-color); color: white;">Invia Richiesta</button>
+        <div class="form-container">
+            <h2 class="main-title">Richiedi un Appuntamento</h2>
+            <form action="https://formspree.io/f/xvzbzaod" method="POST" class="contact-form">
+                <label>La tua email:</label>
+                <input type="email" name="email" placeholder="email@esempio.com" required>
+                
+                <label>Il tuo messaggio:</label>
+                <textarea name="message" rows="6" placeholder="Scrivi qui il tuo messaggio..." required></textarea>
+                
+                <button type="submit" class="btn" style="width:100%; background: var(--primary-color); color:white;">Invia Richiesta</button>
             </form>
         </div>
     </section>
@@ -248,8 +218,8 @@
             const grid = document.getElementById('public-blog-grid');
             const list = document.getElementById('admin-list');
             if(!grid || !list) return;
-            
-            grid.innerHTML = articles.length === 0 ? '<p>Nessun articolo presente.</p>' : '';
+
+            grid.innerHTML = articles.length === 0 ? '<p>Nessun articolo.</p>' : '';
             list.innerHTML = '';
 
             articles.forEach(art => {
