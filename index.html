@@ -35,7 +35,6 @@
 
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* Sidebar */
         .sidebar { 
             background: #2c3e50; 
             color: white; 
@@ -67,7 +66,6 @@
 
         .logout-btn { color: #ff7675 !important; margin-top: auto !important; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px !important; }
 
-        /* Contenuti */
         .dashboard-main { overflow-y: auto; padding: 40px; }
         .dashboard-content { 
             display: none; 
@@ -82,7 +80,6 @@
             to { transform: translateY(0); opacity: 1; } 
         }
 
-        /* Overview Cards */
         .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 25px; margin-bottom: 40px; }
         .stat-card { 
             background: white; padding: 25px; border-radius: 20px; 
@@ -91,7 +88,6 @@
         .stat-card h4 { color: var(--text-light); font-size: 0.8rem; text-transform: uppercase; margin-bottom: 10px; }
         .stat-card .value { font-size: 2rem; font-weight: 700; color: var(--primary-color); }
 
-        /* Tabelle e Form */
         .glass-panel { 
             background: white; padding: 30px; border-radius: 20px; 
             box-shadow: var(--shadow); margin-bottom: 30px; 
@@ -103,7 +99,6 @@
         .table-custom td:first-child { border-left: 1px solid #f0f0f0; border-radius: 12px 0 0 12px; }
         .table-custom td:last-child { border-right: 1px solid #f0f0f0; border-radius: 0 12px 12px 0; text-align: right; }
 
-        /* Bottoni Dashboard */
         .dash-btn { 
             padding: 10px 20px; border-radius: 8px; border: none; 
             cursor: pointer; font-weight: 600; transition: var(--transition);
@@ -112,7 +107,6 @@
         .btn-delete { background: #fee2e2; color: var(--danger); }
         .dash-btn:hover { filter: brightness(0.9); transform: translateY(-2px); }
 
-        /* Form Admin */
         .admin-input { 
             width: 100%; padding: 15px; margin-bottom: 20px; 
             border: 2px solid #eee; border-radius: 12px; font-family: inherit; 
@@ -156,7 +150,6 @@
             to { transform: translateX(120%); opacity: 0; }
         }
 
-        /* --- ANIMAZIONE SHAKE PER ERRORI --- */
         @keyframes shake {
             0%, 100% { transform: translateX(0); }
             25% { transform: translateX(-5px); }
@@ -164,7 +157,6 @@
         }
         .shake { animation: shake 0.2s ease 2; }
 
-        /* --- BOTTONE LOADING --- */
         .btn-loading { color: transparent !important; pointer-events: none; position: relative; }
         .btn-loading::after {
             content: "";
@@ -202,13 +194,15 @@
         }
         @keyframes slideUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
         .close-modal { position: fixed; top: 30px; right: 40px; font-size: 2.5rem; cursor: pointer; color: var(--primary-color); transition: 0.3s; z-index: 10002; }
+        
+        /* GESTIONE TESTO LUNGO MODALE */
         .modal-text { 
-    white-space: pre-wrap;      /* Mantiene gli invii a capo del paziente */
-    word-wrap: break-word;      /* Rompe le parole troppo lunghe */
-    overflow-wrap: break-word; /* Forza il testo a stare nel contenitore */
-    font-size: 1.1rem; 
-    color: #444; 
-    }   
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            font-size: 1.1rem; 
+            color: #444; 
+        }   
 
         /* Auth Overlay */
         #admin-auth-overlay {
@@ -218,7 +212,34 @@
         }
 
         .admin-trigger { font-size: 0.7rem; opacity: 0.4; cursor: pointer; margin-top: 20px; letter-spacing: 2px; text-align: center; color: white; }
+        
+        /* FOOTER E SOCIAL */
         footer { padding: 60px; background: #2c3e50; color: white; text-align: center; }
+        
+        .social-container {
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+        .social-link {
+            width: 45px;
+            height: 45px;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            text-decoration: none;
+            font-size: 1.2rem;
+            transition: var(--transition);
+        }
+        .social-link:hover {
+            background: var(--primary-color);
+            transform: translateY(-5px);
+            color: white;
+        }
     </style>
 </head>
 <body>
@@ -234,7 +255,7 @@
         <div style="background:white; padding:50px; border-radius:30px; text-align:center; width: 380px; box-shadow: 0 20px 50px rgba(0,0,0,0.3);">
             <i class="fas fa-user-shield" style="font-size: 3rem; color: var(--primary-color); margin-bottom: 20px;"></i>
             <h3 style="margin-bottom: 10px;">Area Professionale</h3>
-            <p style="color: var(--text-light); margin-bottom: 25px;">Inserisci la password per accedere</p>
+            <p style="color: var(--text-light); margin-bottom: 25px;">Inserisci la password</p>
             <input type="password" id="adminPass" placeholder="Password" style="width:100%; padding:15px; margin-bottom:20px; border:1px solid #ddd; border-radius:12px; text-align:center; font-size: 1.1rem;">
             <button class="btn btn-primary" id="loginBtn" style="width:100%" onclick="checkPassword()">Accedi Ora</button>
             <p style="margin-top: 20px; cursor: pointer; color: var(--text-light); font-size: 0.9rem;" onclick="closeAuth()">Annulla</p>
@@ -243,9 +264,7 @@
 
     <div id="admin-dashboard">
         <aside class="sidebar">
-            <div class="sidebar-header">
-                <h2>DOTT.SSA MUSCAS</h2>
-            </div>
+            <div class="sidebar-header"><h2>DOTT.SSA MUSCAS</h2></div>
             <ul class="sidebar-nav">
                 <li id="nav-home" class="active" onclick="switchTab('home')"><i class="fas fa-chart-line"></i> Panoramica</li>
                 <li id="nav-msgs" onclick="switchTab('msgs')"><i class="fas fa-envelope"></i> Messaggi</li>
@@ -258,18 +277,9 @@
             <div id="tab-home" class="dashboard-content active">
                 <h1 style="margin-bottom: 30px;">Bentornata, Alessia</h1>
                 <div class="stats-grid">
-                    <div class="stat-card">
-                        <h4>Nuovi Messaggi</h4>
-                        <div class="value" id="count-msgs">0</div>
-                    </div>
-                    <div class="stat-card">
-                        <h4>Articoli Pubblicati</h4>
-                        <div class="value" id="count-posts">0</div>
-                    </div>
-                    <div class="stat-card">
-                        <h4>Visite Totali</h4>
-                        <div class="value">1.240</div>
-                    </div>
+                    <div class="stat-card"><h4>Nuovi Messaggi</h4><div class="value" id="count-msgs">0</div></div>
+                    <div class="stat-card"><h4>Articoli Pubblicati</h4><div class="value" id="count-posts">0</div></div>
+                    <div class="stat-card"><h4>Visite Totali</h4><div class="value">1.240</div></div>
                 </div>
                 <div class="glass-panel">
                     <h3>Azioni Rapide</h3><br>
@@ -283,9 +293,7 @@
                     <h1>Richieste Pazienti</h1>
                     <span id="msg-badge" style="background: var(--primary-color); color: white; padding: 5px 15px; border-radius: 20px; font-size: 0.8rem;">0 Richieste</span>
                 </div>
-                <table class="table-custom">
-                    <tbody id="messages-list"></tbody>
-                </table>
+                <table class="table-custom"><tbody id="messages-list"></tbody></table>
             </div>
 
             <div id="tab-blog" class="dashboard-content">
@@ -293,11 +301,10 @@
                 <div class="glass-panel">
                     <h3>Crea Nuovo Post</h3><br>
                     <input type="text" id="post-title" class="admin-input" placeholder="Titolo dell'articolo">
-                    <input type="text" id="post-img" class="admin-input" placeholder="URL Immagine Copertina (es: Unsplash)">
+                    <input type="text" id="post-img" class="admin-input" placeholder="URL Immagine Copertina">
                     <textarea id="post-content" class="admin-input" rows="8" placeholder="Scrivi qui il contenuto..."></textarea>
                     <button class="btn btn-primary" id="publishBtn" onclick="addPost()">Pubblica Post</button>
                 </div>
-                
                 <h3 style="margin: 40px 0 20px;">Articoli Gestiti</h3>
                 <div id="admin-blog-list"></div>
             </div>
@@ -336,43 +343,32 @@
     </section>
 
     <footer>
+        <div class="social-container">
+            <a href="#" class="social-link" title="Instagram"><i class="fab fa-instagram"></i></a>
+            <a href="#" class="social-link" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" class="social-link" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+        </div>
         <p>&copy; 2026 Dott.ssa Alessia Muscas - Psicologa</p>
         <div class="admin-trigger" onclick="openAuth()">ACCESSO PROFESSIONISTA</div>
     </footer>
 
     <script>
-        // --- SISTEMA TOAST ---
         function showToast(message, type = 'success') {
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
             toast.className = `toast ${type === 'error' ? 'error' : ''}`;
-            
             const icon = type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle';
-            
-            toast.innerHTML = `
-                <i class="fas ${icon}"></i>
-                <span>${message}</span>
-            `;
-            
+            toast.innerHTML = `<i class="fas ${icon}"></i><span>${message}</span>`;
             container.appendChild(toast);
-            
-            // Rimuovi dopo 4 secondi
-            setTimeout(() => {
-                toast.classList.add('fade-out');
-                setTimeout(() => toast.remove(), 500);
-            }, 3500);
+            setTimeout(() => { toast.classList.add('fade-out'); setTimeout(() => toast.remove(), 500); }, 3500);
         }
 
-        // Logica Dati
         let messages = JSON.parse(localStorage.getItem('muscas_messages')) || [];
         let posts = JSON.parse(localStorage.getItem('muscas_posts')) || [
             { id: 1, title: "Gestire l'ansia quotidiana", img: "https://images.unsplash.com/photo-1518063319789-7217e6706b04?auto=format&fit=crop&w=800", content: "L'ansia è un'emozione naturale...\n\nIn questo articolo esploreremo come la respirazione possa aiutarci." }
         ];
 
-        window.onload = () => { 
-            renderPublicBlog(); 
-            updateStats();
-        };
+        window.onload = () => { renderPublicBlog(); updateStats(); };
 
         function updateStats() {
             document.getElementById('count-msgs').innerText = messages.length;
@@ -385,7 +381,6 @@
             document.querySelectorAll('.sidebar li').forEach(l => l.classList.remove('active'));
             document.getElementById('tab-' + tab).classList.add('active');
             document.getElementById('nav-' + (tab === 'home' ? 'home' : tab)).classList.add('active');
-            
             if(tab === 'blog') renderAdminBlog();
             if(tab === 'msgs') renderAdminMsgs();
             updateStats();
@@ -395,16 +390,14 @@
             const grid = document.getElementById('public-blog-grid');
             grid.innerHTML = '';
             posts.forEach(p => {
-                grid.innerHTML += `
-                    <div class="blog-card">
-                        <img src="${p.img}">
-                        <div class="blog-card-body">
-                            <h3>${p.title}</h3>
-                            <p style="color:#666; margin: 15px 0;">${p.content.substring(0, 100)}...</p>
-                            <button class="btn btn-primary" style="font-size:0.8rem" onclick="openPost(${p.id})">Leggi</button>
-                        </div>
+                grid.innerHTML += `<div class="blog-card">
+                    <img src="${p.img}">
+                    <div class="blog-card-body">
+                        <h3>${p.title}</h3>
+                        <p style="color:#666; margin: 15px 0;">${p.content.substring(0, 100)}...</p>
+                        <button class="btn btn-primary" style="font-size:0.8rem" onclick="openPost(${p.id})">Leggi</button>
                     </div>
-                `;
+                </div>`;
             });
         }
 
@@ -412,15 +405,10 @@
             const list = document.getElementById('admin-blog-list');
             list.innerHTML = '';
             posts.forEach(p => {
-                list.innerHTML += `
-                    <div class="glass-panel" style="display:flex; justify-content:space-between; align-items:center; padding: 15px 25px;">
-                        <div>
-                            <strong style="color:var(--primary-color)">${p.title}</strong>
-                            <div style="font-size:0.8rem; color:var(--text-light)">ID: ${p.id}</div>
-                        </div>
-                        <button class="dash-btn btn-delete" onclick="deletePost(${p.id})"><i class="fas fa-trash"></i></button>
-                    </div>
-                `;
+                list.innerHTML += `<div class="glass-panel" style="display:flex; justify-content:space-between; align-items:center; padding: 15px 25px;">
+                    <div><strong style="color:var(--primary-color)">${p.title}</strong><div style="font-size:0.8rem; color:var(--text-light)">ID: ${p.id}</div></div>
+                    <button class="dash-btn btn-delete" onclick="deletePost(${p.id})"><i class="fas fa-trash"></i></button>
+                </div>`;
             });
         }
 
@@ -428,142 +416,90 @@
             const btn = document.getElementById('publishBtn');
             const title = document.getElementById('post-title').value;
             const content = document.getElementById('post-content').value;
-            
-            if(!title || !content) {
-                showToast("Titolo e contenuto sono obbligatori!", "error");
-                return;
-            }
-
+            if(!title || !content) { showToast("Titolo e contenuto obbligatori!", "error"); return; }
             btn.classList.add('btn-loading');
-
             setTimeout(() => {
-                posts.unshift({ 
-                    id: Date.now(), 
-                    title, 
-                    img: document.getElementById('post-img').value || "https://images.unsplash.com/photo-1499750310107-5fef28a66643?auto=format&fit=crop&w=800", 
-                    content 
-                });
+                posts.unshift({ id: Date.now(), title, img: document.getElementById('post-img').value || "https://images.unsplash.com/photo-1499750310107-5fef28a66643?auto=format&fit=crop&w=800", content });
                 localStorage.setItem('muscas_posts', JSON.stringify(posts));
-                document.getElementById('post-title').value = '';
-                document.getElementById('post-content').value = '';
-                renderAdminBlog();
-                renderPublicBlog();
-                updateStats();
+                document.getElementById('post-title').value = ''; document.getElementById('post-content').value = '';
+                renderAdminBlog(); renderPublicBlog(); updateStats();
                 btn.classList.remove('btn-loading');
-                showToast("Articolo pubblicato con successo!");
+                showToast("Articolo pubblicato!");
             }, 800);
         }
 
         function deletePost(id) {
             posts = posts.filter(p => p.id !== id);
             localStorage.setItem('muscas_posts', JSON.stringify(posts));
-            renderAdminBlog();
-            renderPublicBlog();
-            updateStats();
+            renderAdminBlog(); renderPublicBlog(); updateStats();
             showToast("Articolo eliminato.");
         }
 
         function renderAdminMsgs() {
             const list = document.getElementById('messages-list');
-            list.innerHTML = messages.length ? '' : '<p style="padding:20px; color:#999;">Nessun messaggio ricevuto.</p>';
+            list.innerHTML = messages.length ? '' : '<p style="padding:20px; color:#999;">Nessuna richiesta.</p>';
             messages.forEach(m => {
-                list.innerHTML += `
-                    <tr>
-                        <td><strong>${m.name}</strong><br><small>${m.date}</small></td>
-                        <td style="color: var(--text-light)">${m.email}</td>
-                        <td><button class="dash-btn btn-view" onclick="readMsg(${m.id})">Apri</button></td>
-                    </tr>
-                `;
+                const anteprima = m.msg.length > 50 ? m.msg.substring(0, 50) + "..." : m.msg;
+                list.innerHTML += `<tr>
+                    <td><strong>${m.name}</strong><br><small style="color:var(--text-light)">${m.date}</small></td>
+                    <td style="color: var(--text-light); max-width: 300px; overflow: hidden; text-overflow: ellipsis;">${anteprima}</td>
+                    <td><button class="dash-btn btn-view" onclick="readMsg(${m.id})">Apri</button></td>
+                </tr>`;
             });
         }
 
         function readMsg(id) {
             const m = messages.find(msg => msg.id === id);
             const content = document.getElementById('modal-content');
-            content.innerHTML = `
-                <div style="padding: 40px 0;">
-                    <h2 style="color: var(--primary-color)">Dettaglio Messaggio</h2><br>
-                    <p><strong>Da:</strong> ${m.name} (${m.email})</p>
-                    <p><strong>Inviato il:</strong> ${m.date}</p><br>
-                    <div class="modal-text" style="background:var(--bg-grey); padding:30px; border-radius:20px;">${m.msg}</div>
-                </div>
-            `;
+            content.innerHTML = `<div style="padding: 40px 0;">
+                <h2 style="color: var(--primary-color)">Richiesta da ${m.name}</h2><br>
+                <p><strong>Email:</strong> ${m.email} | <strong>Data:</strong> ${m.date}</p><br>
+                <div class="modal-text" style="background:var(--bg-grey); padding:30px; border-radius:20px;">${m.msg}</div>
+            </div>`;
             document.getElementById('universal-modal').style.display = 'block';
         }
 
         function openPost(id) {
             const p = posts.find(post => post.id === id);
-            const content = document.getElementById('modal-content');
-            content.innerHTML = `
+            document.getElementById('modal-content').innerHTML = `
                 <img src="${p.img}" style="width:100%; height:350px; object-fit:cover; border-radius:25px; margin-bottom:30px;">
-                <h1>${p.title}</h1><br>
-                <div class="modal-text">${p.content}</div>
-            `;
+                <h1>${p.title}</h1><br><div class="modal-text">${p.content}</div>`;
             document.getElementById('universal-modal').style.display = 'block';
             document.body.style.overflow = 'hidden';
         }
 
-        function closeModal() { 
-            document.getElementById('universal-modal').style.display = 'none'; 
-            document.body.style.overflow = 'auto';
-        }
-        
+        function closeModal() { document.getElementById('universal-modal').style.display = 'none'; document.body.style.overflow = 'auto'; }
         function openAuth() { document.getElementById('admin-auth-overlay').style.display = 'flex'; }
         function closeAuth() { document.getElementById('admin-auth-overlay').style.display = 'none'; }
         
         function checkPassword() {
-            const btn = document.getElementById('loginBtn');
             const pass = document.getElementById('adminPass').value;
-            
             if(pass === 'psico2026') {
-                btn.classList.add('btn-loading');
-                setTimeout(() => {
-                    closeAuth();
-                    document.getElementById('admin-dashboard').style.display = 'grid';
-                    switchTab('home');
-                    btn.classList.remove('btn-loading');
-                    showToast("Bentornata Dott.ssa!");
-                }, 1000);
-            } else {
-                showToast("Password Errata!", "error");
-            }
+                closeAuth(); document.getElementById('admin-dashboard').style.display = 'grid'; switchTab('home');
+                showToast("Bentornata Dott.ssa!");
+            } else showToast("Password Errata!", "error");
         }
 
-        // --- FUNZIONE SUBMIT AGGIORNATA ---
         function submitForm() {
             const btn = document.getElementById('submitBtn');
-            const formContainer = document.getElementById('contact-form-container');
             const name = document.getElementById('c_name').value;
             const email = document.getElementById('c_email').value;
             const msg = document.getElementById('c_msg').value;
-
-            // Validazione base
             if(!name || !email || !msg) {
-                formContainer.classList.add('shake');
-                showToast("Per favore, compila tutti i campi richiesti", "error");
-                setTimeout(() => formContainer.classList.remove('shake'), 400);
+                document.getElementById('contact-form-container').classList.add('shake');
+                showToast("Compila tutti i campi", "error");
+                setTimeout(() => document.getElementById('contact-form-container').classList.remove('shake'), 400);
                 return;
             }
-
-            // Animazione caricamento
             btn.classList.add('btn-loading');
-
-            // Simulazione invio (es. API call)
             setTimeout(() => {
                 messages.unshift({ id: Date.now(), date: new Date().toLocaleString(), name, email, msg });
                 localStorage.setItem('muscas_messages', JSON.stringify(messages));
-                
-                // Feedback successo
                 btn.classList.remove('btn-loading');
-                showToast("Grazie! Il tuo messaggio è stato inviato correttamente.");
-                
-                // Pulisci campi
-                document.getElementById('c_name').value = '';
-                document.getElementById('c_email').value = '';
-                document.getElementById('c_msg').value = '';
-                
+                showToast("Messaggio inviato!");
+                document.getElementById('c_name').value = ''; document.getElementById('c_email').value = ''; document.getElementById('c_msg').value = '';
                 updateStats();
-            }, 1500);
+            }, 1000);
         }
     </script>
 </body>
