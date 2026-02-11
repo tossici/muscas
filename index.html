@@ -4,339 +4,567 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dott.ssa Alessia Muscas | Psicologa</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Lato:wght@300;400&display=swap" rel="stylesheet">
-    <script src="https://unpkg.com/scrollreveal"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Lato:wght@300;400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
         :root {
             --primary-color: #4e7d6b;
+            --primary-light: #e8f0ed;
             --accent-color: #8fb1a5;
-            --text-dark: #333333;
-            --text-light: #ffffff;
-            --bg-light: #ffffff;
+            --text-dark: #2c3e50;
+            --text-light: #7f8c8d;
             --bg-grey: #f4f7f6;
-            --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            --white: #ffffff;
+            --danger: #e74c3c;
+            --shadow: 0 4px 20px rgba(0,0,0,0.08);
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Lato', sans-serif; color: var(--text-dark); overflow-x: hidden; line-height: 1.6; background: var(--bg-light); }
-        h1, h2, h3 { font-family: 'Montserrat', sans-serif; font-weight: 700; text-transform: uppercase; }
-        
-        /* --- ANIMAZIONI --- */
-        @keyframes fadeInScale {
-            from { opacity: 0; transform: scale(0.9); }
-            to { opacity: 1; transform: scale(1); }
-        }
+        body { font-family: 'Lato', sans-serif; color: var(--text-dark); background: white; line-height: 1.6; overflow-x: hidden; }
+        h1, h2, h3 { font-family: 'Montserrat', sans-serif; font-weight: 700; }
 
-        /* --- DASHBOARD & LOGIN --- */
-        #admin-auth-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.8); display: none; align-items: center; justify-content: center;
-            z-index: 10000; backdrop-filter: blur(5px);
-        }
-
+        /* --- DASHBOARD MODERNA --- */
         #admin-dashboard {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: var(--bg-grey); z-index: 9999; display: none;
             grid-template-columns: 280px 1fr;
+            animation: fadeIn 0.5s ease;
         }
 
-        .auth-card {
-            background: white; padding: 40px; border-radius: 15px; text-align: center;
-            animation: fadeInScale 0.4s ease; box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-        }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        .sidebar { background: #1a252f; color: white; padding: 40px 20px; }
+        /* Sidebar */
+        .sidebar { 
+            background: #2c3e50; 
+            color: white; 
+            padding: 40px 0; 
+            display: flex; 
+            flex-direction: column;
+            box-shadow: 4px 0 10px rgba(0,0,0,0.1);
+        }
+        .sidebar-header { padding: 0 30px 40px; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 20px; }
+        .sidebar-header h2 { font-size: 1.2rem; color: var(--accent-color); letter-spacing: 1px; }
+
+        .sidebar-nav { flex-grow: 1; }
         .sidebar li { 
-            padding: 15px; margin: 10px 0; border-radius: 8px; cursor: pointer; 
-            list-style: none; transition: var(--transition);
+            padding: 15px 30px; 
+            margin: 5px 15px; 
+            border-radius: 12px; 
+            cursor: pointer; 
+            list-style: none; 
+            transition: var(--transition); 
+            display: flex; 
+            align-items: center;
+            gap: 15px;
+            font-weight: 600;
+            color: #bdc3c7;
         }
-        .sidebar li:hover { background: var(--primary-color); transform: translateX(10px); }
+        .sidebar li i { font-size: 1.1rem; width: 25px; }
+        .sidebar li:hover { background: rgba(255,255,255,0.05); color: white; }
+        .sidebar li.active { background: var(--primary-color); color: white; box-shadow: 0 4px 15px rgba(78, 125, 107, 0.3); }
 
-        .admin-table { width: 100%; border-collapse: collapse; margin-top: 20px; background: white; border-radius: 10px; overflow: hidden; }
-        .admin-table th, .admin-table td { padding: 15px; text-align: left; border-bottom: 1px solid #eee; }
-        .action-btn { padding: 5px 10px; border-radius: 5px; cursor: pointer; border: none; font-size: 0.8rem; margin-right: 5px; color: white; }
-        .edit-btn { background: var(--accent-color); }
-        .del-btn { background: #ff7675; }
+        .logout-btn { color: #ff7675 !important; margin-top: auto !important; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px !important; }
 
-        /* --- BLOG --- */
-        #blog { background: var(--bg-grey); }
-        .blog-grid { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(300px, 380px)); 
-            gap: 30px; 
-            margin: 40px auto 0 auto; 
-            max-width: 1200px; 
-            justify-content: center; 
+        /* Contenuti */
+        .dashboard-main { overflow-y: auto; padding: 40px; }
+        .dashboard-content { 
+            display: none; 
+            animation: slideInUp 0.4s ease-out; 
+            max-width: 1100px; 
+            margin: 0 auto; 
         }
-        .blog-card { 
-            background: white; border-radius: 15px; overflow: hidden; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05); transition: var(--transition);
-            display: flex; flex-direction: column; height: 100%;
-            visibility: hidden;
-        }
-        .blog-card:hover { transform: translateY(-10px); box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
-        .blog-card img { width: 100%; height: 220px; object-fit: cover; }
-        .blog-content { padding: 25px; flex-grow: 1; }
-        .blog-content h3 { font-size: 1.1rem; margin-bottom: 10px; color: var(--primary-color); }
-        .blog-date { font-size: 0.8rem; color: #999; margin-bottom: 15px; display: block; }
-        .read-more { color: var(--primary-color); font-weight: bold; cursor: pointer; text-decoration: underline; margin-top: 10px; display: inline-block; }
+        .dashboard-content.active { display: block; }
 
-        /* --- REUSABLE & HERO --- */
-        .section { padding: 100px 10%; min-height: 80vh; display: flex; flex-direction: column; justify-content: center; }
-        .main-title { font-size: 2.5rem; margin-bottom: 50px; position: relative; }
-        .main-title::after { content: ''; position: absolute; left: 0; bottom: -10px; width: 60px; height: 5px; background: var(--primary-color); }
+        @keyframes slideInUp { 
+            from { transform: translateY(20px); opacity: 0; } 
+            to { transform: translateY(0); opacity: 1; } 
+        }
+
+        /* Overview Cards */
+        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 25px; margin-bottom: 40px; }
+        .stat-card { 
+            background: white; padding: 25px; border-radius: 20px; 
+            box-shadow: var(--shadow); border-bottom: 4px solid var(--primary-color);
+        }
+        .stat-card h4 { color: var(--text-light); font-size: 0.8rem; text-transform: uppercase; margin-bottom: 10px; }
+        .stat-card .value { font-size: 2rem; font-weight: 700; color: var(--primary-color); }
+
+        /* Tabelle e Form */
+        .glass-panel { 
+            background: white; padding: 30px; border-radius: 20px; 
+            box-shadow: var(--shadow); margin-bottom: 30px; 
+        }
+        .table-custom { width: 100%; border-collapse: separate; border-spacing: 0 10px; }
+        .table-custom tr { background: #fff; transition: var(--transition); }
+        .table-custom tr:hover { transform: scale(1.01); }
+        .table-custom td { padding: 20px; background: white; border-top: 1px solid #f0f0f0; border-bottom: 1px solid #f0f0f0; }
+        .table-custom td:first-child { border-left: 1px solid #f0f0f0; border-radius: 12px 0 0 12px; }
+        .table-custom td:last-child { border-right: 1px solid #f0f0f0; border-radius: 0 12px 12px 0; text-align: right; }
+
+        /* Bottoni Dashboard */
+        .dash-btn { 
+            padding: 10px 20px; border-radius: 8px; border: none; 
+            cursor: pointer; font-weight: 600; transition: var(--transition);
+        }
+        .btn-view { background: var(--primary-light); color: var(--primary-color); }
+        .btn-delete { background: #fee2e2; color: var(--danger); }
+        .dash-btn:hover { filter: brightness(0.9); transform: translateY(-2px); }
+
+        /* Form Admin */
+        .admin-input { 
+            width: 100%; padding: 15px; margin-bottom: 20px; 
+            border: 2px solid #eee; border-radius: 12px; font-family: inherit; 
+            transition: var(--transition);
+        }
+        .admin-input:focus { border-color: var(--primary-color); outline: none; background: #fafdfc; }
+
+        /* --- NOTIFICHE TOAST --- */
+        #toast-container {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 99999;
+        }
+        .toast {
+            background: white;
+            color: var(--text-dark);
+            padding: 16px 24px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-width: 280px;
+            border-left: 5px solid var(--primary-color);
+            animation: slideInRight 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .toast.error { border-left-color: var(--danger); }
+        .toast i { font-size: 1.2rem; color: var(--primary-color); }
+        .toast.error i { color: var(--danger); }
         
-        .btn {
-            display: inline-block; padding: 12px 35px; border: 2px solid var(--primary-color);
-            font-weight: bold; text-transform: uppercase; cursor: pointer; transition: var(--transition);
-            background: transparent; color: var(--primary-color); border-radius: 50px; text-decoration: none;
+        @keyframes slideInRight {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
         }
-        .btn:hover { background: var(--primary-color); color: white; transform: translateY(-3px); }
-
-        #hero { height: 100vh; background: linear-gradient(to right, #ffffff, #f0f4f2); }
-        .hero-text { font-size: 3.8rem; line-height: 1.1; visibility: hidden; }
-        .hero-text span { color: var(--primary-color); }
-
-        /* --- BIOGRAFIA --- */
-        #bio { background: var(--primary-color); color: white; }
-        .bio-container { display: flex; align-items: center; gap: 60px; flex-wrap: wrap; }
-        .bio-image { 
-            flex: 0 0 350px; height: 450px; object-fit: cover; border-radius: 20px; 
-            box-shadow: 20px 20px 0px var(--accent-color); visibility: hidden;
+        .toast.fade-out {
+            animation: slideOutRight 0.5s ease forwards;
         }
-        .bio-text { flex: 1; min-width: 300px; visibility: hidden; }
-
-        /* --- CONTATTI / FORM --- */
-        #contatti { background: white; }
-        .form-container { max-width: 600px; margin: 0 auto; width: 100%; }
-        .contact-form { background: var(--bg-grey); padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
-        .contact-form label { display: block; margin-bottom: 10px; font-weight: bold; color: var(--primary-color); }
-        .contact-form input, .contact-form textarea {
-            width: 100%; padding: 15px; margin-bottom: 20px; border: 1px solid #ddd; border-radius: 8px; font-family: inherit;
+        @keyframes slideOutRight {
+            to { transform: translateX(120%); opacity: 0; }
         }
 
-        footer { padding: 60px 10%; background: #222; color: white; text-align: center; }
-        .admin-trigger { margin-top: 30px; font-size: 0.7rem; letter-spacing: 2px; cursor: pointer; opacity: 0.4; }
-
-        @media (max-width: 900px) {
-            .hero-text { font-size: 2.5rem; }
-            #admin-dashboard { grid-template-columns: 1fr; }
-            .sidebar { display: none; }
-            .bio-container { justify-content: center; text-align: center; }
-            .bio-image { flex: 0 0 100%; max-width: 300px; height: 350px; margin-bottom: 30px; }
+        /* --- ANIMAZIONE SHAKE PER ERRORI --- */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
         }
+        .shake { animation: shake 0.2s ease 2; }
+
+        /* --- BOTTONE LOADING --- */
+        .btn-loading { color: transparent !important; pointer-events: none; position: relative; }
+        .btn-loading::after {
+            content: "";
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            top: 50%;
+            left: 50%;
+            margin: -10px 0 0 -10px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* --- STILI SITO PUBBLICO --- */
+        #hero { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; background: radial-gradient(circle, #fff 0%, #f0f4f2 100%); text-align: center; }
+        .section { padding: 100px 10%; }
+        .btn { padding: 12px 25px; border-radius: 50px; border: none; cursor: pointer; font-weight: bold; text-transform: uppercase; transition: var(--transition); text-decoration: none; display: inline-block; }
+        .btn-primary { background: var(--primary-color); color: white; box-shadow: 0 4px 15px rgba(78,125,107,0.4); }
+        .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(78,125,107,0.6); }
+
+        .blog-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 30px; }
+        .blog-card { background: white; border-radius: 20px; overflow: hidden; box-shadow: var(--shadow); transition: var(--transition); }
+        .blog-card:hover { transform: translateY(-10px); }
+        .blog-card img { width: 100%; height: 220px; object-fit: cover; }
+        .blog-card-body { padding: 25px; }
+
+        /* MODALE UNIVERSALE */
+        #universal-modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(255,255,255,0.98); z-index: 10001; display: none;
+            padding: 5% 10%; overflow-y: auto; animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        @keyframes slideUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .close-modal { position: fixed; top: 30px; right: 40px; font-size: 2.5rem; cursor: pointer; color: var(--primary-color); transition: 0.3s; z-index: 10002; }
+        .modal-text { 
+    white-space: pre-wrap;      /* Mantiene gli invii a capo del paziente */
+    word-wrap: break-word;      /* Rompe le parole troppo lunghe */
+    overflow-wrap: break-word; /* Forza il testo a stare nel contenitore */
+    font-size: 1.1rem; 
+    color: #444; 
+    }   
+
+        /* Auth Overlay */
+        #admin-auth-overlay {
+            position:fixed; top:0; left:0; width:100%; height:100%; 
+            background:rgba(44, 62, 80, 0.95); display:none; z-index:20000; 
+            align-items:center; justify-content:center; backdrop-filter: blur(8px);
+        }
+
+        .admin-trigger { font-size: 0.7rem; opacity: 0.4; cursor: pointer; margin-top: 20px; letter-spacing: 2px; text-align: center; color: white; }
+        footer { padding: 60px; background: #2c3e50; color: white; text-align: center; }
     </style>
 </head>
 <body>
 
+    <div id="toast-container"></div>
+
+    <div id="universal-modal">
+        <span class="close-modal" onclick="closeModal()"><i class="fas fa-times"></i></span>
+        <div id="modal-content" style="max-width: 800px; margin: 0 auto;"></div>
+    </div>
+
     <div id="admin-auth-overlay">
-        <div class="auth-card">
-            <h3>Accesso Riservato</h3>
-            <input type="password" id="adminPass" placeholder="Password" style="width: 100%; padding: 12px; margin: 20px 0; border-radius: 5px; border: 1px solid #ddd;">
-            <button class="btn" onclick="checkPassword()">Entra</button>
-            <button class="btn" onclick="closeAuth()" style="border:none;">Annulla</button>
+        <div style="background:white; padding:50px; border-radius:30px; text-align:center; width: 380px; box-shadow: 0 20px 50px rgba(0,0,0,0.3);">
+            <i class="fas fa-user-shield" style="font-size: 3rem; color: var(--primary-color); margin-bottom: 20px;"></i>
+            <h3 style="margin-bottom: 10px;">Area Professionale</h3>
+            <p style="color: var(--text-light); margin-bottom: 25px;">Inserisci la password per accedere</p>
+            <input type="password" id="adminPass" placeholder="Password" style="width:100%; padding:15px; margin-bottom:20px; border:1px solid #ddd; border-radius:12px; text-align:center; font-size: 1.1rem;">
+            <button class="btn btn-primary" id="loginBtn" style="width:100%" onclick="checkPassword()">Accedi Ora</button>
+            <p style="margin-top: 20px; cursor: pointer; color: var(--text-light); font-size: 0.9rem;" onclick="closeAuth()">Annulla</p>
         </div>
     </div>
 
     <div id="admin-dashboard">
         <aside class="sidebar">
-            <h2 style="color:white; margin-bottom: 30px;">Dott.ssa Muscas</h2>
-            <ul>
-                <li onclick="scrollToSection('editor-area')">Nuovo Articolo</li>
-                <li onclick="scrollToSection('manage-area')">Gestisci Articoli</li>
-                <li onclick="location.reload()" style="margin-top: 50px; color: #ff7675;">Esci</li>
+            <div class="sidebar-header">
+                <h2>DOTT.SSA MUSCAS</h2>
+            </div>
+            <ul class="sidebar-nav">
+                <li id="nav-home" class="active" onclick="switchTab('home')"><i class="fas fa-chart-line"></i> Panoramica</li>
+                <li id="nav-msgs" onclick="switchTab('msgs')"><i class="fas fa-envelope"></i> Messaggi</li>
+                <li id="nav-blog" onclick="switchTab('blog')"><i class="fas fa-pen-nib"></i> Gestione Blog</li>
+                <li class="logout-btn" onclick="location.reload()"><i class="fas fa-sign-out-alt"></i> Esci</li>
             </ul>
         </aside>
-        <main style="padding: 60px; overflow-y: auto;">
-            <div id="editor-area" style="background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); margin-bottom: 50px;">
-                <h2 id="editor-title">Nuovo Articolo</h2>
-                <input type="hidden" id="edit-id">
-                <input type="text" id="postTitle" placeholder="Titolo" style="width:100%; padding:15px; margin:20px 0 10px 0; border:1px solid #eee; border-radius:8px;">
-                <input type="file" id="postImg" accept="image/*" style="margin-bottom: 20px;">
-                <textarea id="postContent" rows="8" placeholder="Contenuto..." style="width:100%; padding:15px; border:1px solid #eee; border-radius:8px;"></textarea>
-                <button class="btn" id="publish-btn" style="margin-top:20px;" onclick="savePost()">Pubblica</button>
-                <button class="btn" id="cancel-edit" style="margin-top:20px; border:none; display:none;" onclick="resetForm()">Annulla</button>
+
+        <main class="dashboard-main">
+            <div id="tab-home" class="dashboard-content active">
+                <h1 style="margin-bottom: 30px;">Bentornata, Alessia</h1>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h4>Nuovi Messaggi</h4>
+                        <div class="value" id="count-msgs">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <h4>Articoli Pubblicati</h4>
+                        <div class="value" id="count-posts">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <h4>Visite Totali</h4>
+                        <div class="value">1.240</div>
+                    </div>
+                </div>
+                <div class="glass-panel">
+                    <h3>Azioni Rapide</h3><br>
+                    <button class="btn btn-primary" onclick="switchTab('blog')">Scrivi nuovo articolo</button>
+                    <button class="btn btn-outline" style="border: 1px solid #ccc; margin-left:10px; padding: 10px 20px; border-radius: 50px; cursor: pointer;" onclick="switchTab('msgs')">Vedi messaggi</button>
+                </div>
             </div>
-            <div id="manage-area" style="background: white; padding: 40px; border-radius: 20px;">
-                <h2>I tuoi Articoli</h2>
-                <table class="admin-table">
-                    <thead><tr><th>Data</th><th>Titolo</th><th>Azioni</th></tr></thead>
-                    <tbody id="admin-list"></tbody>
+
+            <div id="tab-msgs" class="dashboard-content">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+                    <h1>Richieste Pazienti</h1>
+                    <span id="msg-badge" style="background: var(--primary-color); color: white; padding: 5px 15px; border-radius: 20px; font-size: 0.8rem;">0 Richieste</span>
+                </div>
+                <table class="table-custom">
+                    <tbody id="messages-list"></tbody>
                 </table>
+            </div>
+
+            <div id="tab-blog" class="dashboard-content">
+                <h1 style="margin-bottom: 30px;">Gestione Blog</h1>
+                <div class="glass-panel">
+                    <h3>Crea Nuovo Post</h3><br>
+                    <input type="text" id="post-title" class="admin-input" placeholder="Titolo dell'articolo">
+                    <input type="text" id="post-img" class="admin-input" placeholder="URL Immagine Copertina (es: Unsplash)">
+                    <textarea id="post-content" class="admin-input" rows="8" placeholder="Scrivi qui il contenuto..."></textarea>
+                    <button class="btn btn-primary" id="publishBtn" onclick="addPost()">Pubblica Post</button>
+                </div>
+                
+                <h3 style="margin: 40px 0 20px;">Articoli Gestiti</h3>
+                <div id="admin-blog-list"></div>
             </div>
         </main>
     </div>
 
-    <section id="hero" class="section">
-        <h1 class="hero-text">Ritrova la tua<br><span>Serenità</span> con la<br>Dott.ssa Muscas.</h1>
-        <div style="margin-top: 30px;"><a href="#contatti" class="btn">Contattami</a></div>
+    <section id="hero">
+        <h1 style="font-size: 3.5rem; margin-bottom: 10px;">Dott.ssa Alessia Muscas</h1>
+        <p style="font-size: 1.2rem; color: var(--primary-color); font-weight: bold; letter-spacing: 2px;">PSICOLOGA E PSICOTERAPEUTA</p>
+        <a href="#contatti" class="btn btn-primary" style="margin-top:30px;">Inizia il tuo percorso</a>
     </section>
 
-    <section id="bio" class="section">
-        <div class="bio-container">
-            <img src="https://pixel-p2.s3.eu-central-1.amazonaws.com/doctor/avatar/5f9970a0/5f9970a0-b017-4418-b90b-c588a456f1e7_large.jpg" alt="Dott.ssa Alessia Muscas" class="bio-image">
-            <div class="bio-text">
-                <h2 class="main-title" style="color: white; border-bottom: none;">Chi Sono</h2>
-                <p style="font-size: 1.1rem; margin-bottom: 20px;">Sono la Dott.ssa Alessia Muscas, psicologa specializzata nel supporto clinico e nel benessere della persona. Il mio approccio si basa sull'ascolto empatico e sulla creazione di uno spazio sicuro e non giudicante.</p>
-                <p style="font-size: 1.1rem; margin-bottom: 25px;">Attraverso percorsi personalizzati, aiuto i miei pazienti ad affrontare sfide legate all'ansia, allo stress e alle difficoltà relazionali.</p>
-                <a href="#blog" class="btn" style="border-color: white; color: white;">Leggi i miei consigli</a>
+    <section id="bio" style="padding: 100px 10%; background: var(--primary-color); color: white;">
+        <div style="display: flex; align-items: center; gap: 50px; flex-wrap: wrap;">
+            <img src="https://pixel-p2.s3.eu-central-1.amazonaws.com/doctor/avatar/5f9970a0/5f9970a0-b017-4418-b90b-c588a456f1e7_large.jpg" style="width: 250px; border-radius: 50%; border: 5px solid rgba(255,255,255,0.2);">
+            <div style="flex: 1;">
+                <h2>Il mio approccio</h2><br>
+                <p>Spazio sicuro di ascolto per affrontare ansia, stress e momenti di crisi.</p>
             </div>
         </div>
     </section>
 
     <section id="blog" class="section">
-        <h2 class="main-title">Approfondimenti</h2>
+        <h2 style="text-align:center; margin-bottom:50px; font-size: 2.5rem;">Risorse e Approfondimenti</h2>
         <div class="blog-grid" id="public-blog-grid"></div>
     </section>
 
-    <section id="contatti" class="section">
-        <div class="form-container">
-            <h2 class="main-title">Richiedi un Appuntamento</h2>
-            <form action="https://formspree.io/f/sorin.mateii08@gmail.com" method="POST" class="contact-form">
-                <label>La tua email:</label>
-                <input type="email" name="email" placeholder="email@esempio.com" required>
-                
-                <label>Il tuo messaggio:</label>
-                <textarea name="message" rows="6" placeholder="Scrivi qui il tuo messaggio..." required></textarea>
-                
-                <button type="submit" class="btn" style="width:100%; background: var(--primary-color); color:white;">Invia Richiesta</button>
-            </form>
+    <section id="contatti" class="section" style="background:var(--bg-grey);">
+        <div id="contact-form-container" style="max-width:600px; margin:0 auto; background:white; padding:50px; border-radius:30px; box-shadow: var(--shadow); transition: 0.3s;">
+            <h2 style="text-align:center; margin-bottom:30px;">Contattami</h2>
+            <input type="text" id="c_name" placeholder="Nome" class="admin-input">
+            <input type="email" id="c_email" placeholder="Email" class="admin-input">
+            <textarea id="c_msg" rows="4" placeholder="Messaggio" class="admin-input"></textarea>
+            <button class="btn btn-primary" id="submitBtn" style="width:100%;" onclick="submitForm()">Invia Richiesta</button>
         </div>
     </section>
 
     <footer>
-        <p>&copy; 2026 Dott.ssa Alessia Muscas</p>
-        <div class="admin-trigger" onclick="openAuth()">PORTALE AMMINISTRATORE</div>
+        <p>&copy; 2026 Dott.ssa Alessia Muscas - Psicologa</p>
+        <div class="admin-trigger" onclick="openAuth()">ACCESSO PROFESSIONISTA</div>
     </footer>
 
     <script>
-        let articles = JSON.parse(localStorage.getItem('muscas_blog_data')) || [];
-        const TEXT_LIMIT = 150;
+        // --- SISTEMA TOAST ---
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type === 'error' ? 'error' : ''}`;
+            
+            const icon = type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle';
+            
+            toast.innerHTML = `
+                <i class="fas ${icon}"></i>
+                <span>${message}</span>
+            `;
+            
+            container.appendChild(toast);
+            
+            // Rimuovi dopo 4 secondi
+            setTimeout(() => {
+                toast.classList.add('fade-out');
+                setTimeout(() => toast.remove(), 500);
+            }, 3500);
+        }
 
-        function renderAll() {
+        // Logica Dati
+        let messages = JSON.parse(localStorage.getItem('muscas_messages')) || [];
+        let posts = JSON.parse(localStorage.getItem('muscas_posts')) || [
+            { id: 1, title: "Gestire l'ansia quotidiana", img: "https://images.unsplash.com/photo-1518063319789-7217e6706b04?auto=format&fit=crop&w=800", content: "L'ansia è un'emozione naturale...\n\nIn questo articolo esploreremo come la respirazione possa aiutarci." }
+        ];
+
+        window.onload = () => { 
+            renderPublicBlog(); 
+            updateStats();
+        };
+
+        function updateStats() {
+            document.getElementById('count-msgs').innerText = messages.length;
+            document.getElementById('count-posts').innerText = posts.length;
+            if(document.getElementById('msg-badge')) document.getElementById('msg-badge').innerText = messages.length + ' Richieste';
+        }
+
+        function switchTab(tab) {
+            document.querySelectorAll('.dashboard-content').forEach(c => c.classList.remove('active'));
+            document.querySelectorAll('.sidebar li').forEach(l => l.classList.remove('active'));
+            document.getElementById('tab-' + tab).classList.add('active');
+            document.getElementById('nav-' + (tab === 'home' ? 'home' : tab)).classList.add('active');
+            
+            if(tab === 'blog') renderAdminBlog();
+            if(tab === 'msgs') renderAdminMsgs();
+            updateStats();
+        }
+
+        function renderPublicBlog() {
             const grid = document.getElementById('public-blog-grid');
-            const list = document.getElementById('admin-list');
-            if(!grid || !list) return;
-
-            grid.innerHTML = articles.length === 0 ? '<p>Nessun articolo.</p>' : '';
-            list.innerHTML = '';
-
-            articles.forEach(art => {
-                const isLong = art.content.length > TEXT_LIMIT;
-                const card = document.createElement('div');
-                card.className = 'blog-card';
-                card.style.visibility = 'visible';
-                card.innerHTML = `
-                    <img src="${art.image}">
-                    <div class="blog-content">
-                        <span class="blog-date">${art.date}</span>
-                        <h3>${art.title}</h3>
-                        <p id="text-${art.id}">${isLong ? art.content.substring(0, TEXT_LIMIT) + '...' : art.content}</p>
-                        ${isLong ? `<span class="read-more" id="btn-${art.id}" onclick="toggleReadMore(${art.id})">Leggi ancora</span>` : ''}
+            grid.innerHTML = '';
+            posts.forEach(p => {
+                grid.innerHTML += `
+                    <div class="blog-card">
+                        <img src="${p.img}">
+                        <div class="blog-card-body">
+                            <h3>${p.title}</h3>
+                            <p style="color:#666; margin: 15px 0;">${p.content.substring(0, 100)}...</p>
+                            <button class="btn btn-primary" style="font-size:0.8rem" onclick="openPost(${p.id})">Leggi</button>
+                        </div>
                     </div>
                 `;
-                grid.appendChild(card);
-
-                const tr = document.createElement('tr');
-                tr.innerHTML = `<td>${art.date}</td><td>${art.title}</td><td>
-                    <button class="action-btn edit-btn" onclick="prepareEdit(${art.id})">Modifica</button>
-                    <button class="action-btn del-btn" onclick="deletePost(${art.id})">Elimina</button>
-                </td>`;
-                list.appendChild(tr);
             });
         }
 
-        function toggleReadMore(id) {
-            const art = articles.find(a => a.id === id);
-            const text = document.getElementById(`text-${id}`);
-            const btn = document.getElementById(`btn-${id}`);
-            if (btn.innerText === "Leggi ancora") {
-                text.innerText = art.content;
-                btn.innerText = "Mostra meno";
-            } else {
-                text.innerText = art.content.substring(0, TEXT_LIMIT) + '...';
-                btn.innerText = "Leggi ancora";
-            }
+        function renderAdminBlog() {
+            const list = document.getElementById('admin-blog-list');
+            list.innerHTML = '';
+            posts.forEach(p => {
+                list.innerHTML += `
+                    <div class="glass-panel" style="display:flex; justify-content:space-between; align-items:center; padding: 15px 25px;">
+                        <div>
+                            <strong style="color:var(--primary-color)">${p.title}</strong>
+                            <div style="font-size:0.8rem; color:var(--text-light)">ID: ${p.id}</div>
+                        </div>
+                        <button class="dash-btn btn-delete" onclick="deletePost(${p.id})"><i class="fas fa-trash"></i></button>
+                    </div>
+                `;
+            });
         }
 
-        async function savePost() {
-            const id = document.getElementById('edit-id').value;
-            const title = document.getElementById('postTitle').value;
-            const content = document.getElementById('postContent').value;
-            const imgFile = document.getElementById('postImg').files[0];
+        function addPost() {
+            const btn = document.getElementById('publishBtn');
+            const title = document.getElementById('post-title').value;
+            const content = document.getElementById('post-content').value;
+            
+            if(!title || !content) {
+                showToast("Titolo e contenuto sono obbligatori!", "error");
+                return;
+            }
 
-            if(!title || !content) return alert("Compila tutto!");
+            btn.classList.add('btn-loading');
 
-            let imgData = "https://images.unsplash.com/photo-1499209974431-9dac3adaf471?w=800";
-            if(imgFile) {
-                imgData = await new Promise(r => {
-                    const reader = new FileReader();
-                    reader.onload = e => r(e.target.result);
-                    reader.readAsDataURL(imgFile);
+            setTimeout(() => {
+                posts.unshift({ 
+                    id: Date.now(), 
+                    title, 
+                    img: document.getElementById('post-img').value || "https://images.unsplash.com/photo-1499750310107-5fef28a66643?auto=format&fit=crop&w=800", 
+                    content 
                 });
-            } else if(id) {
-                imgData = articles.find(a => a.id == id).image;
-            }
-
-            if(id) {
-                const i = articles.findIndex(a => a.id == id);
-                articles[i] = { ...articles[i], title, content, image: imgData };
-            } else {
-                articles.unshift({ id: Date.now(), title, content, image: imgData, date: new Date().toLocaleDateString('it-IT') });
-            }
-
-            localStorage.setItem('muscas_blog_data', JSON.stringify(articles));
-            resetForm();
-            renderAll();
+                localStorage.setItem('muscas_posts', JSON.stringify(posts));
+                document.getElementById('post-title').value = '';
+                document.getElementById('post-content').value = '';
+                renderAdminBlog();
+                renderPublicBlog();
+                updateStats();
+                btn.classList.remove('btn-loading');
+                showToast("Articolo pubblicato con successo!");
+            }, 800);
         }
 
         function deletePost(id) {
-            if(confirm("Eliminare?")) {
-                articles = articles.filter(a => a.id !== id);
-                localStorage.setItem('muscas_blog_data', JSON.stringify(articles));
-                renderAll();
-            }
+            posts = posts.filter(p => p.id !== id);
+            localStorage.setItem('muscas_posts', JSON.stringify(posts));
+            renderAdminBlog();
+            renderPublicBlog();
+            updateStats();
+            showToast("Articolo eliminato.");
         }
 
-        function prepareEdit(id) {
-            const art = articles.find(a => a.id == id);
-            document.getElementById('edit-id').value = art.id;
-            document.getElementById('postTitle').value = art.title;
-            document.getElementById('postContent').value = art.content;
-            document.getElementById('publish-btn').innerText = "Salva";
-            document.getElementById('cancel-edit').style.display = "inline-block";
-            scrollToSection('editor-area');
+        function renderAdminMsgs() {
+            const list = document.getElementById('messages-list');
+            list.innerHTML = messages.length ? '' : '<p style="padding:20px; color:#999;">Nessun messaggio ricevuto.</p>';
+            messages.forEach(m => {
+                list.innerHTML += `
+                    <tr>
+                        <td><strong>${m.name}</strong><br><small>${m.date}</small></td>
+                        <td style="color: var(--text-light)">${m.email}</td>
+                        <td><button class="dash-btn btn-view" onclick="readMsg(${m.id})">Apri</button></td>
+                    </tr>
+                `;
+            });
         }
 
-        function resetForm() {
-            document.getElementById('edit-id').value = '';
-            document.getElementById('postTitle').value = '';
-            document.getElementById('postContent').value = '';
-            document.getElementById('postImg').value = '';
-            document.getElementById('publish-btn').innerText = "Pubblica";
-            document.getElementById('cancel-edit').style.display = "none";
+        function readMsg(id) {
+            const m = messages.find(msg => msg.id === id);
+            const content = document.getElementById('modal-content');
+            content.innerHTML = `
+                <div style="padding: 40px 0;">
+                    <h2 style="color: var(--primary-color)">Dettaglio Messaggio</h2><br>
+                    <p><strong>Da:</strong> ${m.name} (${m.email})</p>
+                    <p><strong>Inviato il:</strong> ${m.date}</p><br>
+                    <div class="modal-text" style="background:var(--bg-grey); padding:30px; border-radius:20px;">${m.msg}</div>
+                </div>
+            `;
+            document.getElementById('universal-modal').style.display = 'block';
         }
 
+        function openPost(id) {
+            const p = posts.find(post => post.id === id);
+            const content = document.getElementById('modal-content');
+            content.innerHTML = `
+                <img src="${p.img}" style="width:100%; height:350px; object-fit:cover; border-radius:25px; margin-bottom:30px;">
+                <h1>${p.title}</h1><br>
+                <div class="modal-text">${p.content}</div>
+            `;
+            document.getElementById('universal-modal').style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() { 
+            document.getElementById('universal-modal').style.display = 'none'; 
+            document.body.style.overflow = 'auto';
+        }
+        
         function openAuth() { document.getElementById('admin-auth-overlay').style.display = 'flex'; }
         function closeAuth() { document.getElementById('admin-auth-overlay').style.display = 'none'; }
         
         function checkPassword() {
-            if(document.getElementById('adminPass').value === 'psico2026') {
-                closeAuth();
-                document.getElementById('admin-dashboard').style.display = 'grid';
-                renderAll();
-            } else alert("Password Errata");
+            const btn = document.getElementById('loginBtn');
+            const pass = document.getElementById('adminPass').value;
+            
+            if(pass === 'psico2026') {
+                btn.classList.add('btn-loading');
+                setTimeout(() => {
+                    closeAuth();
+                    document.getElementById('admin-dashboard').style.display = 'grid';
+                    switchTab('home');
+                    btn.classList.remove('btn-loading');
+                    showToast("Bentornata Dott.ssa!");
+                }, 1000);
+            } else {
+                showToast("Password Errata!", "error");
+            }
         }
-        
-        function scrollToSection(id) { document.getElementById(id).scrollIntoView({ behavior: 'smooth' }); }
 
-        ScrollReveal().reveal('.hero-text', { origin: 'left', distance: '80px', duration: 1200 });
-        ScrollReveal().reveal('.main-title', { origin: 'left', distance: '40px', duration: 1200 });
-        ScrollReveal().reveal('.bio-image', { origin: 'left', distance: '80px', duration: 1200, delay: 200 });
-        ScrollReveal().reveal('.bio-text', { origin: 'right', distance: '80px', duration: 1200, delay: 400 });
+        // --- FUNZIONE SUBMIT AGGIORNATA ---
+        function submitForm() {
+            const btn = document.getElementById('submitBtn');
+            const formContainer = document.getElementById('contact-form-container');
+            const name = document.getElementById('c_name').value;
+            const email = document.getElementById('c_email').value;
+            const msg = document.getElementById('c_msg').value;
 
-        renderAll();
+            // Validazione base
+            if(!name || !email || !msg) {
+                formContainer.classList.add('shake');
+                showToast("Per favore, compila tutti i campi richiesti", "error");
+                setTimeout(() => formContainer.classList.remove('shake'), 400);
+                return;
+            }
+
+            // Animazione caricamento
+            btn.classList.add('btn-loading');
+
+            // Simulazione invio (es. API call)
+            setTimeout(() => {
+                messages.unshift({ id: Date.now(), date: new Date().toLocaleString(), name, email, msg });
+                localStorage.setItem('muscas_messages', JSON.stringify(messages));
+                
+                // Feedback successo
+                btn.classList.remove('btn-loading');
+                showToast("Grazie! Il tuo messaggio è stato inviato correttamente.");
+                
+                // Pulisci campi
+                document.getElementById('c_name').value = '';
+                document.getElementById('c_email').value = '';
+                document.getElementById('c_msg').value = '';
+                
+                updateStats();
+            }, 1500);
+        }
     </script>
 </body>
 </html>
