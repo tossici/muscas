@@ -219,12 +219,15 @@
             </div>
 
             <div id="tab-blog" class="dashboard-content">
-                <h1>Gestione Blog 📑</h1>
+                <h1 id="blog-editor-title">Gestione Blog 📑</h1>
                 <div class="glass-panel">
                     <input type="text" id="post-title" class="admin-input" placeholder="Titolo dell'articolo">
                     <input type="text" id="post-img" class="admin-input" placeholder="URL Immagine di copertina">
                     <textarea id="post-content" class="admin-input" rows="5" placeholder="Contenuto..."></textarea>
-                    <button class="btn btn-primary" id="publishBtn" style="width:100%" onclick="addPost()">🚀 Pubblica</button>
+                    <div style="display:flex; gap:10px;">
+                        <button class="btn btn-primary" id="publishBtn" style="flex:1" onclick="addPost()">🚀 Pubblica</button>
+                        <button class="btn" id="cancelEditBtn" style="background:#eee; display:none;" onclick="resetBlogForm()">Annulla</button>
+                    </div>
                 </div>
                 <div id="admin-blog-list"></div>
             </div>
@@ -285,7 +288,7 @@
     </footer>
 
     <script>
-        // Caricamento Dati
+        // --- DATA LAYER ---
         let messages = JSON.parse(localStorage.getItem('muscas_messages')) || [];
         let posts = JSON.parse(localStorage.getItem('muscas_posts')) || [
             { id: 1, title: "Gestire l'ansia quotidiana", img: "https://images.unsplash.com/photo-1518063319789-7217e6706b04?auto=format&fit=crop&w=800", content: "L'ansia è un'emozione naturale...\n\nIn questo articolo esploreremo come la respirazione possa aiutarci." }
@@ -293,11 +296,12 @@
 
         window.onload = () => { renderPublicBlog(); updateStats(); };
 
-        // Utility
+        // --- UTILS ---
         function showToast(message, type = 'success') {
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
             toast.className = `toast ${type === 'error' ? 'error' : ''}`;
+            toast.style.borderLeft = type === 'error' ? '5px solid #e74c3c' : '5px solid #4e7d6b';
             toast.innerHTML = `<i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i><span>${message}</span>`;
             container.appendChild(toast);
             setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 500); }, 3000);
@@ -313,11 +317,11 @@
             document.querySelectorAll('.sidebar li').forEach(l => l.classList.remove('active'));
             document.getElementById('tab-' + tab).classList.add('active');
             document.getElementById('nav-' + (tab === 'home' ? 'home' : tab)).classList.add('active');
-            if(tab === 'blog') renderAdminBlog();
+            if(tab === 'blog') { resetBlogForm(); renderAdminBlog(); }
             if(tab === 'msgs') renderAdminMsgs();
         }
 
-        // Blog Logica
+        // --- BLOG LOGICA (EDITING INTEGRATO) ---
         function renderPublicBlog() {
             const grid = document.getElementById('public-blog-grid');
             grid.innerHTML = posts.map(p => `
@@ -337,34 +341,88 @@
         function renderAdminBlog() {
             const list = document.getElementById('admin-blog-list');
             list.innerHTML = posts.map(p => `
-                <div class="glass-panel" style="display:flex; justify-content:space-between; align-items:center; padding: 15px; margin-bottom: 10px;">
+                <div class="glass-panel" style="display:flex; justify-content:space-between; align-items:center; padding: 15px; margin-bottom:10px;">
                     <span style="font-weight:bold; font-size:0.9rem;">📝 ${p.title}</span>
-                <div style="display:flex; gap:10px;">
-                    <button class="dash-btn btn-view" onclick="prepareEditPost(${p.id})"><i class="fas fa-edit"></i></button>
-                    <button class="dash-btn btn-delete" onclick="deletePost(${p.id})"><i class="fas fa-trash"></i></button>
+                    <div style="display:flex; gap:8px;">
+                        <button class="dash-btn btn-view" onclick="prepareEditPost(${p.id})"><i class="fas fa-edit"></i></button>
+                        <button class="dash-btn btn-delete" onclick="deletePost(${p.id})"><i class="fas fa-trash"></i></button>
+                    </div>
                 </div>
-            </div>
-    `).join('');
-}
+            `).join('');
+        }
+
+        function prepareEditPost(id) {
+            const p = posts.find(post => post.id === id);
+            if (!p) return;
+
+            // Carica i dati negli input
+            document.getElementById('post-title').value = p.title;
+            document.getElementById('post-img').value = p.img;
+            document.getElementById('post-content').value = p.content;
+
+            // Cambia UI del pulsante
+            const publishBtn = document.getElementById('publishBtn');
+            publishBtn.innerHTML = "💾 Salva Modifiche";
+            publishBtn.setAttribute('data-editing-id', id);
+            document.getElementById('cancelEditBtn').style.display = 'block';
+            document.getElementById('blog-editor-title').innerText = "Modifica Articolo ✏️";
+            
+            // Scroll al modulo
+            document.querySelector('.dashboard-main').scrollTop = 0;
+        }
+
+        function resetBlogForm() {
+            document.getElementById('post-title').value = '';
+            document.getElementById('post-img').value = '';
+            document.getElementById('post-content').value = '';
+            
+            const publishBtn = document.getElementById('publishBtn');
+            publishBtn.innerHTML = "🚀 Pubblica";
+            publishBtn.removeAttribute('data-editing-id');
+            document.getElementById('cancelEditBtn').style.display = 'none';
+            document.getElementById('blog-editor-title').innerText = "Gestione Blog 📑";
+        }
+
         function addPost() {
             const title = document.getElementById('post-title').value;
             const content = document.getElementById('post-content').value;
-            if(!title || !content) return showToast("Compila i campi", "error");
+            const img = document.getElementById('post-img').value || "https://images.unsplash.com/photo-1499750310107-5fef28a66643?auto=format&fit=crop&w=800";
             
-            posts.unshift({ id: Date.now(), title, img: document.getElementById('post-img').value || "https://images.unsplash.com/photo-1499750310107-5fef28a66643?auto=format&fit=crop&w=800", content });
+            if(!title || !content) return showToast("Compila i campi", "error");
+
+            const publishBtn = document.getElementById('publishBtn');
+            const editingId = publishBtn.getAttribute('data-editing-id');
+
+            if (editingId) {
+                // Modalità Modifica
+                const index = posts.findIndex(p => p.id == editingId);
+                if (index !== -1) {
+                    posts[index] = { ...posts[index], title, img, content };
+                    showToast("Articolo aggiornato con successo!");
+                }
+            } else {
+                // Modalità Nuovo
+                posts.unshift({ id: Date.now(), title, img, content });
+                showToast("Articolo pubblicato! 🚀");
+            }
+            
             localStorage.setItem('muscas_posts', JSON.stringify(posts));
-            renderAdminBlog(); renderPublicBlog(); updateStats();
-            showToast("Articolo pubblicato! 🚀");
-            document.querySelectorAll('#tab-blog input, #tab-blog textarea').forEach(i => i.value = '');
+            resetBlogForm();
+            renderAdminBlog(); 
+            renderPublicBlog(); 
+            updateStats();
         }
 
         function deletePost(id) {
-            posts = posts.filter(p => p.id !== id);
-            localStorage.setItem('muscas_posts', JSON.stringify(posts));
-            renderAdminBlog(); renderPublicBlog(); updateStats();
+            if(confirm("Sei sicura di voler eliminare questo post?")) {
+                posts = posts.filter(p => p.id !== id);
+                localStorage.setItem('muscas_posts', JSON.stringify(posts));
+                renderAdminBlog(); renderPublicBlog(); updateStats();
+                showToast("Articolo rimosso", "error");
+            }
         }
 
-        // Messaggi Logica
+        // --- MESSAGGI LOGICA ---
         function renderAdminMsgs() {
             const list = document.getElementById('messages-list');
             if (messages.length === 0) {
@@ -416,17 +474,17 @@
             updateStats();
         }
 
-        // Gestione UI Modali
+        // --- GESTIONE UI MODALI ---
         function openPost(id) {
-    const p = posts.find(post => post.id === id);
-    document.getElementById('modal-content').innerHTML = `
-        <img src="${p.img}" style="width:100%; border-radius:20px; margin-bottom:20px; max-height:400px; object-fit:cover;">
-        <h1>${p.title}</h1>
-        <br>
-        <p style="white-space: pre-wrap; font-size: 1.1rem; color: #444; line-height: 1.8;">${p.content}</p>
-    `;
-    document.getElementById('universal-modal').style.display = 'block';
-    }
+            const p = posts.find(post => post.id === id);
+            document.getElementById('modal-content').innerHTML = `
+                <img src="${p.img}" style="width:100%; border-radius:20px; margin-bottom:20px; max-height:400px; object-fit:cover;">
+                <h1>${p.title}</h1>
+                <br>
+                <p style="white-space: pre-wrap; font-size: 1.1rem; color: #444; line-height: 1.8;">${p.content}</p>
+            `;
+            document.getElementById('universal-modal').style.display = 'block';
+        }
 
         function closeModal() { document.getElementById('universal-modal').style.display = 'none'; }
         function openAuth() { document.getElementById('admin-auth-overlay').style.display = 'flex'; }
