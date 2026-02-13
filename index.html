@@ -337,13 +337,15 @@
         function renderAdminBlog() {
             const list = document.getElementById('admin-blog-list');
             list.innerHTML = posts.map(p => `
-                <div class="glass-panel" style="display:flex; justify-content:space-between; align-items:center; padding: 15px;">
+                <div class="glass-panel" style="display:flex; justify-content:space-between; align-items:center; padding: 15px; margin-bottom: 10px;">
                     <span style="font-weight:bold; font-size:0.9rem;">📝 ${p.title}</span>
+                <div style="display:flex; gap:10px;">
+                    <button class="dash-btn btn-view" onclick="prepareEditPost(${p.id})"><i class="fas fa-edit"></i></button>
                     <button class="dash-btn btn-delete" onclick="deletePost(${p.id})"><i class="fas fa-trash"></i></button>
                 </div>
-            `).join('');
-        }
-
+            </div>
+    `).join('');
+}
         function addPost() {
             const title = document.getElementById('post-title').value;
             const content = document.getElementById('post-content').value;
