@@ -152,16 +152,9 @@
         /* FOOTER */
         footer { padding: 40px 20px; background: #2c3e50; color: white; text-align: center; }
 
-        /* ==========================================================================
-           RESPONSIVE DESIGN (MEDIA QUERIES)
-           ========================================================================== */
-
         @media (max-width: 992px) {
             #admin-dashboard { grid-template-columns: 1fr; }
-            .sidebar { 
-                position: fixed; bottom: 0; left: 0; width: 100%; height: 70px; 
-                flex-direction: row; padding: 0; z-index: 1000; 
-            }
+            .sidebar { position: fixed; bottom: 0; left: 0; width: 100%; height: 70px; flex-direction: row; padding: 0; z-index: 1000; }
             .sidebar-header { display: none; }
             .sidebar-nav { display: flex; width: 100%; justify-content: space-around; align-items: center; }
             .sidebar li { margin: 0; padding: 10px; flex-direction: column; gap: 5px; font-size: 0.7rem; }
@@ -169,28 +162,6 @@
             .logout-btn { border-top: none !important; margin-top: 0 !important; padding-top: 10px !important; }
             .dashboard-main { padding: 20px 20px 100px 20px; }
             .stats-grid { grid-template-columns: 1fr; }
-        }
-
-        @media (max-width: 768px) {
-            .section { padding: 60px 5%; }
-            #hero h1 { font-size: 2.2rem !important; }
-            #bio { text-align: center; }
-            #bio div { flex-direction: column; gap: 20px; }
-            #bio img { width: 180px; }
-            
-            .table-custom td { padding: 15px 10px; font-size: 0.9rem; }
-            .table-custom td:nth-child(2) { display: none; } /* Nasconde anteprima messaggio su mobile */
-            
-            .glass-panel { padding: 20px; }
-            #contact-form-container { padding: 30px 20px; }
-            
-            #toast-container { left: 20px; right: 20px; bottom: 80px; }
-            .toast { min-width: auto; }
-        }
-
-        @media (max-width: 480px) {
-            .blog-grid { grid-template-columns: 1fr; }
-            .admin-auth-overlay div { width: 100% !important; padding: 30px !important; }
         }
     </style>
 </head>
@@ -218,42 +189,42 @@
         <aside class="sidebar">
             <div class="sidebar-header"><h2>DOTT.SSA MUSCAS</h2></div>
             <ul class="sidebar-nav">
-                <li id="nav-home" class="active" onclick="switchTab('home')"><i class="fas fa-chart-line"></i> <span>Home</span></li>
-                <li id="nav-msgs" onclick="switchTab('msgs')"><i class="fas fa-envelope"></i> <span>Messaggi</span></li>
-                <li id="nav-blog" onclick="switchTab('blog')"><i class="fas fa-pen-nib"></i> <span>Blog</span></li>
-                <li class="logout-btn" onclick="location.reload()"><i class="fas fa-sign-out-alt"></i> <span>Esci</span></li>
+                <li id="nav-home" class="active" onclick="switchTab('home')"><i class="fas fa-chart-line"></i> <span>🏠 Home</span></li>
+                <li id="nav-msgs" onclick="switchTab('msgs')"><i class="fas fa-calendar-check"></i> <span>📅 Prenotazioni</span></li>
+                <li id="nav-blog" onclick="switchTab('blog')"><i class="fas fa-pen-nib"></i> <span>✍️ Blog</span></li>
+                <li class="logout-btn" onclick="location.reload()"><i class="fas fa-sign-out-alt"></i> <span>🚪 Esci</span></li>
             </ul>
         </aside>
 
         <main class="dashboard-main">
             <div id="tab-home" class="dashboard-content active">
-                <h1 style="margin-bottom: 20px;">Bentornata</h1>
+                <h1 style="margin-bottom: 20px;">Bentornata 👋</h1>
                 <div class="stats-grid">
-                    <div class="stat-card"><h4>Messaggi</h4><div class="value" id="count-msgs">0</div></div>
-                    <div class="stat-card"><h4>Articoli</h4><div class="value" id="count-posts">0</div></div>
-                    <div class="stat-card"><h4>Visite</h4><div class="value">1.240</div></div>
+                    <div class="stat-card"><h4>Prenotazioni</h4><div class="value"><span id="count-msgs">0</span> 📩</div></div>
+                    <div class="stat-card"><h4>Articoli</h4><div class="value"><span id="count-posts">0</span> 📝</div></div>
+                    <div class="stat-card"><h4>Visite Sito</h4><div class="value">1.240 📈</div></div>
                 </div>
                 <div class="glass-panel">
-                    <h3>Azioni Rapide</h3><br>
+                    <h3>Azioni Rapide ⚡</h3><br>
                     <div style="display:flex; gap:10px; flex-wrap:wrap;">
-                        <button class="btn btn-primary" onclick="switchTab('blog')">Nuovo Post</button>
-                        <button class="btn" style="background:#eee;" onclick="switchTab('msgs')">Messaggi</button>
+                        <button class="btn btn-primary" onclick="switchTab('blog')">✨ Nuovo Post</button>
+                        <button class="btn" style="background:#eee;" onclick="switchTab('msgs')">🔎 Vedi Prenotazioni</button>
                     </div>
                 </div>
             </div>
 
             <div id="tab-msgs" class="dashboard-content">
-                <h1>Richieste</h1>
+                <h1>Richieste di Colloquio 📋</h1>
                 <table class="table-custom"><tbody id="messages-list"></tbody></table>
             </div>
 
             <div id="tab-blog" class="dashboard-content">
-                <h1>Blog</h1>
+                <h1>Gestione Blog 📑</h1>
                 <div class="glass-panel">
-                    <input type="text" id="post-title" class="admin-input" placeholder="Titolo">
-                    <input type="text" id="post-img" class="admin-input" placeholder="URL Immagine">
+                    <input type="text" id="post-title" class="admin-input" placeholder="Titolo dell'articolo">
+                    <input type="text" id="post-img" class="admin-input" placeholder="URL Immagine di copertina">
                     <textarea id="post-content" class="admin-input" rows="5" placeholder="Contenuto..."></textarea>
-                    <button class="btn btn-primary" id="publishBtn" style="width:100%" onclick="addPost()">Pubblica</button>
+                    <button class="btn btn-primary" id="publishBtn" style="width:100%" onclick="addPost()">🚀 Pubblica</button>
                 </div>
                 <div id="admin-blog-list"></div>
             </div>
@@ -263,13 +234,13 @@
     <section id="hero">
         <h1 style="font-size: 3.5rem; margin-bottom: 10px;">Dott.ssa Alessia Muscas</h1>
         <p style="font-size: 1.1rem; color: var(--primary-color); font-weight: bold; letter-spacing: 2px; text-transform: uppercase;">Psicologa e Psicoterapeuta</p>
-        <a href="#contatti" class="btn btn-primary" style="margin-top:30px;">Contattami</a>
+        <a href="#prenota" class="btn btn-primary" style="margin-top:30px;">Prenota un Colloquio</a>
     </section>
 
     <section id="bio" style="padding: 80px 10%; background: var(--primary-color); color: white;">
-        <div style="display: flex; align-items: center; gap: 40px; max-width: 1000px; margin: 0 auto;">
+        <div style="display: flex; align-items: center; gap: 40px; max-width: 1000px; margin: 0 auto; flex-wrap: wrap; justify-content: center;">
             <img src="https://pixel-p2.s3.eu-central-1.amazonaws.com/doctor/avatar/5f9970a0/5f9970a0-b017-4418-b90b-c588a456f1e7_large.jpg" style="width: 200px; height: 200px; border-radius: 50%; object-fit: cover; border: 5px solid rgba(255,255,255,0.2);">
-            <div style="flex: 1;">
+            <div style="flex: 1; min-width: 300px;">
                 <h2>Il mio approccio</h2><br>
                 <p>Offro uno spazio sicuro di ascolto e sostegno per affrontare ansia, stress e momenti di cambiamento, promuovendo il benessere psicologico attraverso percorsi personalizzati.</p>
             </div>
@@ -281,12 +252,25 @@
         <div class="blog-grid" id="public-blog-grid"></div>
     </section>
 
-    <section id="contatti" class="section" style="background:var(--bg-grey);">
+    <section id="prenota" class="section" style="background:var(--bg-grey);">
         <div id="contact-form-container" style="max-width:600px; margin:0 auto; background:white; padding:40px; border-radius:30px; box-shadow: var(--shadow);">
-            <h2 style="text-align:center; margin-bottom:30px;">Invia un messaggio</h2>
-            <input type="text" id="c_name" placeholder="Nome" class="admin-input">
-            <input type="email" id="c_email" placeholder="Email" class="admin-input">
-            <textarea id="c_msg" rows="4" placeholder="Come posso aiutarti?" class="admin-input"></textarea>
+            <h2 style="text-align:center; margin-bottom:10px;">Prenota un Colloquio</h2>
+            <p style="text-align: center; color: var(--text-light); margin-bottom: 30px;">Compila il modulo per essere ricontattato/a</p>
+            
+            <input type="text" id="c_name" placeholder="Nome e Cognome" class="admin-input">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                <input type="email" id="c_email" placeholder="Email" class="admin-input">
+                <input type="tel" id="c_phone" placeholder="Telefono" class="admin-input">
+            </div>
+            
+            <select id="c_type" class="admin-input">
+                <option value="" disabled selected>Preferenza modalità</option>
+                <option value="In Studio">🏥 In Studio (Sanluri - Cagliari)</option>
+                <option value="Online">💻 Online (Videochiamata)</option>
+            </select>
+
+            <textarea id="c_msg" rows="4" placeholder="Breve motivo della richiesta (opzionale)" class="admin-input"></textarea>
+            
             <button class="btn btn-primary" id="submitBtn" style="width:100%;" onclick="submitForm()">Invia Richiesta</button>
         </div>
     </section>
@@ -301,9 +285,7 @@
     </footer>
 
     <script>
-        // Logica JavaScript invariata rispetto alla tua, 
-        // ma ho pulito leggermente le funzioni per la gestione dei dati
-        
+        // Caricamento Dati
         let messages = JSON.parse(localStorage.getItem('muscas_messages')) || [];
         let posts = JSON.parse(localStorage.getItem('muscas_posts')) || [
             { id: 1, title: "Gestire l'ansia quotidiana", img: "https://images.unsplash.com/photo-1518063319789-7217e6706b04?auto=format&fit=crop&w=800", content: "L'ansia è un'emozione naturale...\n\nIn questo articolo esploreremo come la respirazione possa aiutarci." }
@@ -311,6 +293,7 @@
 
         window.onload = () => { renderPublicBlog(); updateStats(); };
 
+        // Utility
         function showToast(message, type = 'success') {
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
@@ -334,6 +317,7 @@
             if(tab === 'msgs') renderAdminMsgs();
         }
 
+        // Blog Logica
         function renderPublicBlog() {
             const grid = document.getElementById('public-blog-grid');
             grid.innerHTML = posts.map(p => `
@@ -354,7 +338,7 @@
             const list = document.getElementById('admin-blog-list');
             list.innerHTML = posts.map(p => `
                 <div class="glass-panel" style="display:flex; justify-content:space-between; align-items:center; padding: 15px;">
-                    <span style="font-weight:bold; font-size:0.9rem;">${p.title}</span>
+                    <span style="font-weight:bold; font-size:0.9rem;">📝 ${p.title}</span>
                     <button class="dash-btn btn-delete" onclick="deletePost(${p.id})"><i class="fas fa-trash"></i></button>
                 </div>
             `).join('');
@@ -368,7 +352,8 @@
             posts.unshift({ id: Date.now(), title, img: document.getElementById('post-img').value || "https://images.unsplash.com/photo-1499750310107-5fef28a66643?auto=format&fit=crop&w=800", content });
             localStorage.setItem('muscas_posts', JSON.stringify(posts));
             renderAdminBlog(); renderPublicBlog(); updateStats();
-            showToast("Pubblicato!");
+            showToast("Articolo pubblicato! 🚀");
+            document.querySelectorAll('#tab-blog input, #tab-blog textarea').forEach(i => i.value = '');
         }
 
         function deletePost(id) {
@@ -377,30 +362,69 @@
             renderAdminBlog(); renderPublicBlog(); updateStats();
         }
 
+        // Messaggi Logica
         function renderAdminMsgs() {
             const list = document.getElementById('messages-list');
+            if (messages.length === 0) {
+                list.innerHTML = "<tr><td colspan='3' style='text-align:center; padding:20px;'>Nessuna prenotazione ricevuta 🧊</td></tr>";
+                return;
+            }
             list.innerHTML = messages.map(m => `
                 <tr>
-                    <td><strong>${m.name}</strong></td>
-                    <td>${m.msg.substring(0,30)}...</td>
-                    <td><button class="dash-btn btn-view" onclick="readMsg(${m.id})">Leggi</button></td>
+                    <td><strong>👤 ${m.name}</strong><br><small>🗓️ ${m.date}</small></td>
+                    <td><span class="btn-view" style="padding:4px 10px; border-radius:6px; font-size:0.7rem;">${m.type === 'Online' ? '💻' : '🏥'} ${m.type}</span></td>
+                    <td><button class="dash-btn btn-view" onclick="readMsg(${m.id})">👁️ Dettagli</button></td>
                 </tr>
             `).join('');
         }
 
         function readMsg(id) {
             const m = messages.find(msg => msg.id === id);
-            document.getElementById('modal-content').innerHTML = `<h2>Da: ${m.name}</h2><p>Email: ${m.email}</p><hr style="margin:20px 0;"><p>${m.msg}</p>`;
+            document.getElementById('modal-content').innerHTML = `
+                <h2>Richiesta da: ${m.name} 👤</h2>
+                <div style="margin:20px 0; background:#f9f9f9; padding:25px; border-radius:20px; line-height:2;">
+                    <p><strong>📧 Email:</strong> ${m.email}</p>
+                    <p><strong>📞 Telefono:</strong> ${m.phone}</p>
+                    <p><strong>📍 Modalità:</strong> ${m.type}</p>
+                    <hr style="margin:15px 0; border:0; border-top:1px solid #ddd;">
+                    <p><strong>💬 Messaggio:</strong><br>${m.msg || 'Nessun messaggio aggiuntivo.'}</p>
+                </div>
+                <button class="btn btn-primary" onclick="closeModal()">Chiudi ✅</button>
+            `;
             document.getElementById('universal-modal').style.display = 'block';
         }
 
-        function openPost(id) {
-            const p = posts.find(post => post.id === id);
-            document.getElementById('modal-content').innerHTML = `
-                <img src="${p.img}" style="width:100%; border-radius:15px; margin-bottom:20px;">
-                <h1>${p.title}</h1><br><p style="white-space:pre-wrap;">${p.content}</p>`;
-            document.getElementById('universal-modal').style.display = 'block';
+        function submitForm() {
+            const name = document.getElementById('c_name').value;
+            const email = document.getElementById('c_email').value;
+            const phone = document.getElementById('c_phone').value;
+            const type = document.getElementById('c_type').value;
+            const msg = document.getElementById('c_msg').value;
+
+            if(!name || !email || !phone || !type) return showToast("Compila i campi obbligatori ⚠️", "error");
+
+            messages.unshift({ 
+                id: Date.now(), name, email, phone, type, msg, 
+                date: new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
+            });
+            
+            localStorage.setItem('muscas_messages', JSON.stringify(messages));
+            showToast("Richiesta inviata con successo! ✨");
+            document.querySelectorAll('#prenota input, #prenota textarea, #prenota select').forEach(i => i.value = '');
+            updateStats();
         }
+
+        // Gestione UI Modali
+        function openPost(id) {
+    const p = posts.find(post => post.id === id);
+    document.getElementById('modal-content').innerHTML = `
+        <img src="${p.img}" style="width:100%; border-radius:20px; margin-bottom:20px; max-height:400px; object-fit:cover;">
+        <h1>${p.title}</h1>
+        <br>
+        <p style="white-space: pre-wrap; font-size: 1.1rem; color: #444; line-height: 1.8;">${p.content}</p>
+    `;
+    document.getElementById('universal-modal').style.display = 'block';
+    }
 
         function closeModal() { document.getElementById('universal-modal').style.display = 'none'; }
         function openAuth() { document.getElementById('admin-auth-overlay').style.display = 'flex'; }
@@ -411,20 +435,9 @@
                 closeAuth(); 
                 document.getElementById('admin-dashboard').style.display = 'grid'; 
                 switchTab('home');
-            } else showToast("Errata", "error");
-        }
-
-        function submitForm() {
-            const name = document.getElementById('c_name').value;
-            const email = document.getElementById('c_email').value;
-            const msg = document.getElementById('c_msg').value;
-            if(!name || !email || !msg) return showToast("Compila tutto", "error");
-
-            messages.unshift({ id: Date.now(), name, email, msg, date: new Date().toLocaleDateString() });
-            localStorage.setItem('muscas_messages', JSON.stringify(messages));
-            showToast("Inviato con successo!");
-            document.querySelectorAll('#contatti input, #contatti textarea').forEach(i => i.value = '');
-            updateStats();
+            } else {
+                showToast("Password errata ❌", "error");
+            }
         }
     </script>
 </body>
