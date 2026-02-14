@@ -25,7 +25,6 @@
         body { font-family: 'Lato', sans-serif; color: var(--text-dark); background: white; line-height: 1.6; overflow-x: hidden; }
         h1, h2, h3 { font-family: 'Montserrat', sans-serif; font-weight: 700; }
 
-        /* --- DASHBOARD MODERNA --- */
         #admin-dashboard {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: var(--bg-grey); z-index: 9999; display: none;
@@ -147,6 +146,22 @@
 
         footer { padding: 40px 20px; background: #2c3e50; color: white; text-align: center; }
 
+        /* Stile specifico per il caricamento foto */
+        .file-upload-wrapper {
+            margin-bottom: 20px;
+            border: 2px dashed #ccc;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            transition: var(--transition);
+        }
+        .file-upload-wrapper:hover { border-color: var(--primary-color); }
+        #image-preview { 
+            width: 100%; max-height: 250px; object-fit: cover; 
+            border-radius: 12px; margin-top: 15px; display: none; 
+            box-shadow: var(--shadow);
+        }
+
         @media (max-width: 992px) {
             #admin-dashboard { grid-template-columns: 1fr; }
             .sidebar { position: fixed; bottom: 0; left: 0; width: 100%; height: 70px; flex-direction: row; padding: 0; z-index: 1000; }
@@ -217,7 +232,17 @@
                 <h1 id="blog-editor-title">Gestione Blog 📑</h1>
                 <div class="glass-panel">
                     <input type="text" id="post-title" class="admin-input" placeholder="Titolo dell'articolo">
-                    <input type="text" id="post-img" class="admin-input" placeholder="URL Immagine di copertina">
+                    
+                    <div class="file-upload-wrapper">
+                        <label for="post-file" style="cursor:pointer; display:block;">
+                            <i class="fas fa-camera" style="font-size: 1.5rem; color: var(--primary-color);"></i><br>
+                            <span id="file-label-text">Clicca per caricare una foto dal file</span>
+                        </label>
+                        <input type="file" id="post-file" accept="image/*" style="display:none;" onchange="handleImageUpload(this)">
+                        <input type="hidden" id="post-img-data">
+                        <img id="image-preview" src="">
+                    </div>
+
                     <textarea id="post-content" class="admin-input" rows="5" placeholder="Contenuto..."></textarea>
                     <div style="display:flex; gap:10px;">
                         <button class="btn btn-primary" id="publishBtn" style="flex:1" onclick="addPost()">🚀 Pubblica</button>
@@ -295,11 +320,8 @@
             updateStats(); 
         };
 
-        // --- LOGICA CONTEGGIO VISITE ---
         function trackVisits() {
             let totalVisits = parseInt(localStorage.getItem('site_total_visits')) || 0;
-            
-            // Incrementa solo se è una nuova sessione del browser (evita F5 compulsivi)
             if (!sessionStorage.getItem('visit_counted')) {
                 totalVisits++;
                 localStorage.setItem('site_total_visits', totalVisits);
@@ -322,8 +344,6 @@
         function updateStats() {
             document.getElementById('count-msgs').innerText = messages.length;
             document.getElementById('count-posts').innerText = posts.length;
-            
-            // Mostra le visite salvate nel localStorage
             const realVisits = localStorage.getItem('site_total_visits') || 0;
             document.getElementById('count-visits').innerText = Number(realVisits).toLocaleString();
         }
@@ -335,6 +355,39 @@
             document.getElementById('nav-' + (tab === 'home' ? 'home' : tab)).classList.add('active');
             if(tab === 'blog') { resetBlogForm(); renderAdminBlog(); }
             if(tab === 'msgs') renderAdminMsgs();
+        }
+
+        // --- GESTIONE IMMAGINE (Nuova!) ---
+        function handleImageUpload(input) {
+            const file = input.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const imgElement = new Image();
+                imgElement.src = e.target.result;
+
+                imgElement.onload = function() {
+                    // Compressione su Canvas (per non saturare localStorage)
+                    const canvas = document.createElement('canvas');
+                    const MAX_WIDTH = 800;
+                    const scaleSize = MAX_WIDTH / imgElement.width;
+                    canvas.width = MAX_WIDTH;
+                    canvas.height = imgElement.height * scaleSize;
+
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(imgElement, 0, 0, canvas.width, canvas.height);
+
+                    const compressedBase64 = canvas.toDataURL('image/jpeg', 0.7); // Qualità 70%
+                    document.getElementById('post-img-data').value = compressedBase64;
+                    
+                    const preview = document.getElementById('image-preview');
+                    preview.src = compressedBase64;
+                    preview.style.display = 'block';
+                    document.getElementById('file-label-text').innerText = "Foto caricata correttamente ✓";
+                };
+            };
+            reader.readAsDataURL(file);
         }
 
         // --- BLOG LOGICA ---
@@ -371,8 +424,13 @@
             const p = posts.find(post => post.id === id);
             if (!p) return;
             document.getElementById('post-title').value = p.title;
-            document.getElementById('post-img').value = p.img;
+            document.getElementById('post-img-data').value = p.img;
             document.getElementById('post-content').value = p.content;
+            
+            const preview = document.getElementById('image-preview');
+            preview.src = p.img;
+            preview.style.display = 'block';
+            
             const publishBtn = document.getElementById('publishBtn');
             publishBtn.innerHTML = "💾 Salva Modifiche";
             publishBtn.setAttribute('data-editing-id', id);
@@ -383,8 +441,12 @@
 
         function resetBlogForm() {
             document.getElementById('post-title').value = '';
-            document.getElementById('post-img').value = '';
+            document.getElementById('post-img-data').value = '';
             document.getElementById('post-content').value = '';
+            document.getElementById('post-file').value = '';
+            document.getElementById('image-preview').style.display = 'none';
+            document.getElementById('file-label-text').innerText = "Clicca per caricare una foto dal file";
+            
             const publishBtn = document.getElementById('publishBtn');
             publishBtn.innerHTML = "🚀 Pubblica";
             publishBtn.removeAttribute('data-editing-id');
@@ -395,10 +457,13 @@
         function addPost() {
             const title = document.getElementById('post-title').value;
             const content = document.getElementById('post-content').value;
-            const img = document.getElementById('post-img').value || "https://images.unsplash.com/photo-1499750310107-5fef28a66643?auto=format&fit=crop&w=800";
+            const img = document.getElementById('post-img-data').value || "https://images.unsplash.com/photo-1499750310107-5fef28a66643?auto=format&fit=crop&w=800";
+            
             if(!title || !content) return showToast("Compila i campi", "error");
+            
             const publishBtn = document.getElementById('publishBtn');
             const editingId = publishBtn.getAttribute('data-editing-id');
+            
             if (editingId) {
                 const index = posts.findIndex(p => p.id == editingId);
                 if (index !== -1) {
@@ -409,6 +474,7 @@
                 posts.unshift({ id: Date.now(), title, img, content });
                 showToast("Articolo pubblicato! 🚀");
             }
+            
             localStorage.setItem('muscas_posts', JSON.stringify(posts));
             resetBlogForm();
             renderAdminBlog(); 
